@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "117676470824",
+    "firebase_url": "https://if-city-pizza.firebaseio.com",
+    "project_id": "if-city-pizza",
+    "storage_bucket": "if-city-pizza.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:117676470824:android:9bfba5d414726774",
+        "android_client_info": {
+          "package_name": "com.yleaf.stas.if_citypizza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "117676470824-uq9hkq7r81n6afjf4j6j1lpoag569aq2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.yleaf.stas.if_citypizza",
+            "certificate_hash": "528aa0a47fcf492dc5823739a31fc34340e36f88"
+          }
+        },
+        {
+          "client_id": "117676470824-v63oepaevu6sdq26juko39i84ang5cuh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAxSM0gkqEA2oUhVzAcmLLtQ5LEDcSHXmI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "117676470824-v63oepaevu6sdq26juko39i84ang5cuh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
