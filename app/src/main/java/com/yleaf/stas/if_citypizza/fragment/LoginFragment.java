@@ -36,7 +36,6 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Utils;
-import com.yleaf.stas.if_citypizza.activity.LoginActivity;
 import com.yleaf.stas.if_citypizza.activity.MainActivity;
 
 import java.util.regex.Matcher;
@@ -48,7 +47,7 @@ import static android.content.Context.MODE_PRIVATE;
  * Created by stas on 21.03.18.
  */
 
-public class Login_Fragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment implements View.OnClickListener {
     private static View view;
 
     private static EditText emailid, password;
@@ -61,14 +60,14 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private static Context appContext;
-    private static final String TAG = Login_Fragment.class.getSimpleName();
+    private static final String TAG = LoginFragment.class.getSimpleName();
     private static ProgressDialog pd;
 
     private String login = "login";
     private String pass = "password";
     private String sharedPrefName = "credentials";
 
-    public Login_Fragment() {}
+    public LoginFragment() {}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -91,16 +90,13 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-
                             saveCredentials(email, password);
                             getActivity().finish();
                             startActivity(MainActivity.newIntent(getActivity()));
 
-                            if (pd.isShowing())
-                                pd.dismiss();
+                            stopProgressDialog();
                         } else {
-                            if (pd.isShowing())
-                                pd.dismiss();
+                            stopProgressDialog();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -128,7 +124,6 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
         view = inflater.inflate(R.layout.login_layout, container, false);
         initViews();
         setListeners();
-        setCredentials();
         return view;
     }
 
@@ -136,14 +131,13 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
     private void initViews() {
         fragmentManager = getActivity().getFragmentManager();
 
-        emailid = (EditText) view.findViewById(R.id.login_emailid);
-        password = (EditText) view.findViewById(R.id.login_password);
-        loginButton = (Button) view.findViewById(R.id.loginBtn);
-        forgotPassword = (TextView) view.findViewById(R.id.forgot_password);
-        signUp = (TextView) view.findViewById(R.id.createAccount);
-        show_hide_password = (CheckBox) view
-                .findViewById(R.id.show_hide_password);
-        loginLayout = (LinearLayout) view.findViewById(R.id.login_layout);
+        emailid = view.findViewById(R.id.login_emailid);
+        password = view.findViewById(R.id.login_password);
+        loginButton = view.findViewById(R.id.loginBtn);
+        forgotPassword = view.findViewById(R.id.forgot_password);
+        signUp = view.findViewById(R.id.createAccount);
+        show_hide_password =  view.findViewById(R.id.show_hide_password);
+        loginLayout = view.findViewById(R.id.login_layout);
 
         // Load ShakeAnimation
         shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
@@ -205,7 +199,7 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
                 fragmentManager
                         .beginTransaction()
                         .setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_righ)
-                        .replace(R.id.frameContainer, new ForgotPassword_Fragment()).addToBackStack(null).commit();
+                        .replace(R.id.frameContainer, new ForgotPasswordFragment()).addToBackStack(null).commit();
                 break;
             case R.id.createAccount:
 
@@ -213,7 +207,7 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
                 fragmentManager
                         .beginTransaction()
                         .setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_righ)
-                        .replace(R.id.frameContainer, new SignUp_Fragment()).addToBackStack(null).commit();
+                        .replace(R.id.frameContainer, new SignUpFragment()).addToBackStack(null).commit();
                 break;
         }
 
@@ -231,9 +225,11 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
         return pref.getString(credential, "");
     }
 
-    private void setCredentials() {
-        emailid.setText(getCredential(login));
-        password.setText(getCredential(pass));
+    private void stopProgressDialog() {
+        if(pd != null) {
+            if (pd.isShowing())
+                pd.dismiss();
+        }
     }
 
     // Check Validation before login
@@ -248,8 +244,7 @@ public class Login_Fragment extends Fragment implements View.OnClickListener {
         Matcher m = p.matcher(getEmailId);
 
         // Check for both field is empty or not
-        if (getEmailId.isEmpty() || getEmailId.length() == 0
-                || getPassword.isEmpty()|| getPassword.length() == 0) {
+        if (getEmailId.isEmpty() || getPassword.isEmpty()) {
             loginLayout.startAnimation(shakeAnimation);
             new CustomToast().Show_Toast(getActivity(), view,
                     "Enter both credentials.");

@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.app.Fragment;
-import android.app.FragmentManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.fragment.MainFragment;
 
@@ -24,7 +25,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
-        FragmentManager fm = getFragmentManager();
+        createFragment();
+    }
+
+    public static Intent newIntent(Context packageContext) {
+        return new Intent(packageContext, MainActivity.class);
+
+    }
+
+    private void createFragment() {
+        FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentById(R.id.fragment_container);
 
         if(fragment == null) {
@@ -35,8 +45,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public static Intent newIntent(Context packageContext) {
-        return new Intent(packageContext, MainActivity.class);
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        // FireBaseAuth sign out
+      //  FirebaseAuth.getInstance().signOut();
     }
 }

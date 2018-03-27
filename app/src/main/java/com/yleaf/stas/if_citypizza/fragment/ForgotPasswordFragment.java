@@ -29,16 +29,16 @@ import java.util.regex.Pattern;
  * Created by stas on 21.03.18.
  */
 
-public class ForgotPassword_Fragment extends Fragment implements View.OnClickListener {
+public class ForgotPasswordFragment extends Fragment implements View.OnClickListener {
     private static View view;
 
-    private static String TAG = ForgotPassword_Fragment.class.getSimpleName();
+    private static String TAG = ForgotPasswordFragment.class.getSimpleName();
 
     private static EditText emailId;
     private static TextView submit, back;
     private static ProgressDialog pd;
 
-    public ForgotPassword_Fragment() {}
+    public ForgotPasswordFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,9 +52,9 @@ public class ForgotPassword_Fragment extends Fragment implements View.OnClickLis
 
     // Initialize the views
     private void initViews() {
-        emailId = (EditText) view.findViewById(R.id.registered_emailid);
-        submit = (TextView) view.findViewById(R.id.forgot_button);
-        back = (TextView) view.findViewById(R.id.backToLoginBtn);
+        emailId = view.findViewById(R.id.registered_emailid);
+        submit = view.findViewById(R.id.forgot_button);
+        back = view.findViewById(R.id.backToLoginBtn);
     }
 
     // Set Listeners over buttons
@@ -109,11 +109,6 @@ public class ForgotPassword_Fragment extends Fragment implements View.OnClickLis
     }
 
     private boolean findEmail(String eMail) {
-      //  for(String string: FileManager.getEmailsList()) {
-     //       if(string.equalsIgnoreCase(eMail)) {
-     //           return true;
-     //       }
-     //   }
         return true;
     }
 
@@ -127,7 +122,7 @@ public class ForgotPassword_Fragment extends Fragment implements View.OnClickLis
         Matcher m = p.matcher(getEmailId);
 
         // First check if email id is not null else show error toast
-        if (getEmailId.isEmpty() || getEmailId.length() == 0) {
+        if (getEmailId.isEmpty()) {
             new CustomToast().Show_Toast(getActivity(), view,
                     "Please enter your Email Id.");
 

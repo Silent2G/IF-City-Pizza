@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
  * Created by stas on 22.03.18.
  */
 
-public class SignUp_Fragment extends Fragment implements View.OnClickListener {
+public class SignUpFragment extends Fragment implements View.OnClickListener {
     private static View view;
     private static EditText fullName, emailId, mobileNumber, location,
             password, confirmPassword;
@@ -43,9 +43,9 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
 
-    private static final String TAG = SignUp_Fragment.class.getSimpleName();
+    private static final String TAG = SignUpFragment.class.getSimpleName();
 
-    public SignUp_Fragment() {
+    public SignUpFragment() {
 
     }
 
@@ -66,15 +66,15 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
 
     // Initialize all views
     private void initViews() {
-        fullName = (EditText) view.findViewById(R.id.fullName);
-        emailId = (EditText) view.findViewById(R.id.userEmailId);
-        mobileNumber = (EditText) view.findViewById(R.id.mobileNumber);
-        location = (EditText) view.findViewById(R.id.location);
-        password = (EditText) view.findViewById(R.id.password);
-        confirmPassword = (EditText) view.findViewById(R.id.confirmPassword);
-        signUpButton = (Button) view.findViewById(R.id.signUpBtn);
-        login = (TextView) view.findViewById(R.id.already_user);
-        terms_conditions = (CheckBox) view.findViewById(R.id.terms_conditions);
+        fullName = view.findViewById(R.id.fullName);
+        emailId = view.findViewById(R.id.userEmailId);
+        mobileNumber = view.findViewById(R.id.mobileNumber);
+        location = view.findViewById(R.id.location);
+        password = view.findViewById(R.id.password);
+        confirmPassword = view.findViewById(R.id.confirmPassword);
+        signUpButton = view.findViewById(R.id.signUpBtn);
+        login = view.findViewById(R.id.already_user);
+        terms_conditions = view.findViewById(R.id.terms_conditions);
     }
 
     // Set Listeners
@@ -136,7 +136,7 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
     // Check Validation Method
     private void checkValidation() {
 
-        // Get all edittext texts
+        // Get all editText texts
         String getFullName = fullName.getText().toString();
         String getEmailId = emailId.getText().toString();
         String getMobileNumber = mobileNumber.getText().toString();
@@ -149,12 +149,12 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
         Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not
-        if (getFullName.isEmpty() || getFullName.length() == 0
-                || getEmailId.isEmpty() || getEmailId.length() == 0
-                || getMobileNumber.isEmpty() || getMobileNumber.length() == 0
-                || getLocation.isEmpty() || getLocation.length() == 0
-                || getPassword.isEmpty() || getPassword.length() == 0
-                || getConfirmPassword.isEmpty() || getConfirmPassword.length() == 0)
+        if (getFullName.isEmpty()
+                || getEmailId.isEmpty()
+                || getMobileNumber.isEmpty()
+                || getLocation.isEmpty()
+                || getPassword.isEmpty()
+                || getConfirmPassword.isEmpty())
 
             new CustomToast().Show_Toast(getActivity(), view,
                     "All fields are required.");
@@ -176,7 +176,7 @@ public class SignUp_Fragment extends Fragment implements View.OnClickListener {
 
             // Else do signUp or do your stuff
         else {
-            if (Login_Fragment.isOnline()) {
+            if (LoginFragment.isOnline()) {
                 fireBaseSignInWithEmail(getFullName, getEmailId, getPassword, getMobileNumber, getLocation);
             } else {
                 new CustomToast().Show_Toast(getActivity(), view,

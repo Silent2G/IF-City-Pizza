@@ -7,9 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Utils;
-import com.yleaf.stas.if_citypizza.fragment.Login_Fragment;
+import com.yleaf.stas.if_citypizza.fragment.LoginFragment;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -24,6 +25,12 @@ public class LoginActivity extends AppCompatActivity {
             finish();
         }
 
+        // if user entered start Main Activity
+        if(FirebaseAuth.getInstance().getCurrentUser() != null) {
+            startActivity(MainActivity.newIntent(getApplicationContext()));
+            finish();
+        }
+
         setContentView(R.layout.activity_login);
         fragmentManager = getFragmentManager();
 
@@ -31,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             fragmentManager
                     .beginTransaction()
-                    .replace(R.id.frameContainer, new Login_Fragment(),
+                    .replace(R.id.frameContainer, new LoginFragment(),
                             Utils.Login_Fragment).commit();
         }
 
@@ -52,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
         fragmentManager
                 .beginTransaction()
                 .setCustomAnimations(R.animator.slide_in_left, R.animator.slide_in_righ, 0,0)
-                .replace(R.id.frameContainer, new Login_Fragment()).commit();
+                .replace(R.id.frameContainer, new LoginFragment()).commit();
     }
 
     @Override
