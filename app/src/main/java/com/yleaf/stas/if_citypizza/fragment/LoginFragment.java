@@ -91,6 +91,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             saveCredentials(email, password);
+                          //  String s = task.getResult().getUser().getIdToken(true).getResult().getToken();
                             getActivity().finish();
                             startActivity(MainActivity.newIntent(getActivity()));
 

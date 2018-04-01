@@ -18,4 +18,6 @@
     <string name="confirmPassword">Confirm Password</string>
     <string name="terms_conditions">By clicking SignUp you agree all the Terms and Conditions.</string>
     <string name="already_user">Already have Account? Login here.</string>
+    <string name="get_data">Get Data</string>
+    <string name="push_data">Push data</string>
 </resources>

@@ -11,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.adapter.ViewPagerAdapter;
@@ -28,10 +30,16 @@ public class MainFragment extends Fragment {
     private TabLayout tabLayout;
     private MaterialSearchView searchView;
 
+    private DocumentReference db ;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Access a Cloud Firestore instance from your Activity
+
+       // db = FirebaseFirestore.getInstance().document("sampleDta/inspiration");
     }
 
     @Nullable

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.yleaf.stas.if_citypizza.Pizza;
 import com.yleaf.stas.if_citypizza.R;
 
 /**
@@ -47,8 +46,6 @@ public class PizzaFragment extends Fragment {
         private TextView mTitleItem;
         private TextView mMakerItem;
         private ImageButton mImageButton;
-
-        private Pizza pizza;
 
         public PizzaHolder(View itemView) {
             super(itemView);
