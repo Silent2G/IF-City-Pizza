@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yleaf.stas.if_citypizza.R;
+import com.yleaf.stas.if_citypizza.Resources;
 import com.yleaf.stas.if_citypizza.admin.Pizza;
 
 import org.jsoup.Jsoup;
@@ -137,16 +138,16 @@ public class MainActivityAdmin extends AppCompatActivity {
                             .select("span.amount")
                             .text();
                     String imageSrc = element.select("img").attr("src");
-                    String imagePath = makeImage(imageSrc, Resources.AZTECA);
+                   // String imagePath = makeImage(imageSrc, Resources.AZTECA);
 
 
                     aztecaList.add(new Pizza(title, null, priceStandart,
                             priceLarge, diameter, diameterLarge,
-                            description, imageSrc, imagePath));
+                            description, imageSrc));
 
                     Log.i(TAG, title + "\n" + priceStandart + "\n" + priceLarge + "\n"
                             + description + "\n" + diameter + "\n" + diameterLarge
-                            + "\n" + imageSrc + "\n" + imagePath);
+                            + "\n" + imageSrc);
                 }
 
             } catch (IOException e) {
@@ -193,16 +194,16 @@ public class MainActivityAdmin extends AppCompatActivity {
                             .select("span.mis_right").text();
                     String imgSrc = element.select("img")
                             .attr("src");
-                    String imagePath = makeImage(imgSrc, Resources.PIZZAIF);
+                   // String imagePath = makeImage(imgSrc, Resources.PIZZAIF);
 
 
                     pizzaIFList.add(new Pizza(title, parserPizzaIfWeight(diameterAndWeight), priceStandart,
                             null, parsePizzaIfDiameter(diameterAndWeight), null,
-                            description, imgSrc, imagePath));
+                            description, imgSrc));
 
                     Log.i(TAG, title + "\n" + description
                             + "\n" + parsePizzaIfDiameter(diameterAndWeight) + "\n" + priceStandart
-                            + "\n" + imgSrc + "\n" + imagePath + "\n" + parserPizzaIfWeight(diameterAndWeight));
+                            + "\n" + imgSrc + "\n" + parserPizzaIfWeight(diameterAndWeight));
                 }
             }
             catch (IOException e) {
@@ -257,7 +258,7 @@ public class MainActivityAdmin extends AppCompatActivity {
 
                     camelotFoodList.add(new Pizza(title, null, priceStandart,
                             null, diameter, null, description,
-                            imgSrc, null));
+                            imgSrc));
 
                     Log.i(TAG, title + "\n" + description + "\n"
                             + diameter + "\n" + priceStandart + "\n" + imgSrc);
@@ -352,11 +353,5 @@ public class MainActivityAdmin extends AppCompatActivity {
             Log.i(TAG, " FOLDER NOT CREATED");
 
         return folder.toString();
-    }
-
-    public class Resources {
-        public static final String AZTECA      = "azteca.if.ua";
-        public static final String PIZZAIF     = "pizza-if.com";
-        public static final String CAMELOTFOOD = "camelot-food.com";
     }
 }

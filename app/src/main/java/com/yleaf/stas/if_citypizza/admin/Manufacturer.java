@@ -2,6 +2,7 @@ package com.yleaf.stas.if_citypizza.admin;
 
 public class Manufacturer {
 
+    private int id;
     private String address;
     private String email;
     private String logoSrc;
@@ -11,6 +12,20 @@ public class Manufacturer {
     private String ukrtelecom;
 
     public Manufacturer() {}
+
+    public Manufacturer(int id, String address, String email,
+                        String logoSrc, String kyivstar,
+                        String vodafone, String lifecell,
+                        String ukrtelecom) {
+        this.id = id;
+        this.address = address;
+        this.email = email;
+        this.logoSrc = logoSrc;
+        this.kyivstar = kyivstar;
+        this.vodafone = vodafone;
+        this.lifecell = lifecell;
+        this.ukrtelecom = ukrtelecom;
+    }
 
     public Manufacturer(String address, String email,
                         String logoSrc, String kyivstar,
@@ -24,6 +39,10 @@ public class Manufacturer {
         this.vodafone = vodafone;
         this.lifecell = lifecell;
         this.ukrtelecom = ukrtelecom;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getAddress() {

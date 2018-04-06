@@ -2,6 +2,7 @@ package com.yleaf.stas.if_citypizza.admin;
 
 public class Pizza {
 
+    private int id;
     private String title;
     private String weight;
     private String priceStandart;
@@ -10,14 +11,29 @@ public class Pizza {
     private String diameterLarge;
     private String description;
     private String imageSrc;
-    private String imagePath;
 
     public Pizza() {}
+
+    public Pizza(int id, String title, String weight,
+                 String priceStandart, String priceLarge,
+                 String diameterStandart, String diameterLarge,
+                 String description, String imageSrc) {
+
+        this.id = id;
+        this.title = title;
+        this.weight = weight;
+        this.priceStandart = priceStandart;
+        this.priceLarge = priceLarge;
+        this.diameterStandart = diameterStandart;
+        this.diameterLarge = diameterLarge;
+        this.description = description;
+        this.imageSrc = imageSrc;
+    }
 
     public Pizza(String title, String weight, String priceStandart,
                  String priceLarge, String diameterStandart,
                  String diameterLarge, String description,
-                 String imageSrc, String imagePath) {
+                 String imageSrc) {
 
         this.title = title;
         this.weight = weight;
@@ -27,7 +43,10 @@ public class Pizza {
         this.diameterLarge = diameterLarge;
         this.description = description;
         this.imageSrc = imageSrc;
-        this.imagePath = imagePath;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -56,10 +75,6 @@ public class Pizza {
 
     public String getImageSrc() {
         return imageSrc;
-    }
-
-    public String getImagePath() {
-        return imagePath;
     }
 
     public String getWeight() {

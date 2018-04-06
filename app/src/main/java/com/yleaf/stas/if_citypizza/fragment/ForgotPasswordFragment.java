@@ -19,7 +19,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Utils;
+import com.yleaf.stas.if_citypizza.Resources;
 import com.yleaf.stas.if_citypizza.activity.LoginActivity;
 
 import java.util.regex.Matcher;
@@ -116,7 +116,7 @@ public class ForgotPasswordFragment extends Fragment implements View.OnClickList
         String getEmailId = emailId.getText().toString();
 
         // Pattern for email id validation
-        Pattern p = Pattern.compile(Utils.regEx);
+        Pattern p = Pattern.compile(Resources.regEx);
 
         // Match the pattern
         Matcher m = p.matcher(getEmailId);

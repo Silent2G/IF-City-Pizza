@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.fragment.MainFragment;
 
