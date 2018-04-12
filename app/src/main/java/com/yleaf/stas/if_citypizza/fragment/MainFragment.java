@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ProgressBar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -45,6 +47,7 @@ public class MainFragment extends Fragment {
     public ViewPager viewPager;
     private Toolbar toolbar;
     private TabLayout tabLayout;
+    private ProgressBar progressBar;
     private MaterialSearchView searchView;
     private AtomicInteger atomicInteger;
 
@@ -142,6 +145,7 @@ public class MainFragment extends Fragment {
 
     private void checkAndIncrementSuccess() {
         if(atomicInteger.incrementAndGet() == 6) {
+            progressBar.setVisibility(View.GONE);
             doSomething();
         }
 
@@ -182,6 +186,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.tab_layout, container, false);
         initWidgets(view);
+        progressBar.setVisibility(View.VISIBLE);
 
         return view;
     }
@@ -191,6 +196,7 @@ public class MainFragment extends Fragment {
         viewPager = view.findViewById(R.id.view_pager);
         searchView = view.findViewById(R.id.search_view);
         tabLayout = view.findViewById(R.id.tab_layout);
+        progressBar = view.findViewById(R.id.progressBarTabLayout);
     }
 
     private void setWidgets() {
