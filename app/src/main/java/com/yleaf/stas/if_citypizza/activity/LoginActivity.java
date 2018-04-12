@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Resources;
+import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.fragment.LoginFragment;
 
 public class LoginActivity extends AppCompatActivity {
@@ -39,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
             fragmentManager
                     .beginTransaction()
                     .replace(R.id.frameContainer, new LoginFragment(),
-                            Resources.Login_Fragment).commit();
+                            Resource.Login_Fragment).commit();
         }
 
         // On close icon click finish activity
@@ -66,9 +66,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onBackPressed() {
         // Find the tag of signUp and forgot password fragment
         Fragment SignUp_Fragment = fragmentManager
-                .findFragmentByTag(Resources.SignUp_Fragment);
+                .findFragmentByTag(Resource.SignUp_Fragment);
         Fragment ForgotPassword_Fragment = fragmentManager
-                .findFragmentByTag(Resources.ForgotPassword_Fragment);
+                .findFragmentByTag(Resource.ForgotPassword_Fragment);
 
         // Check if both are null or not
         // If both are not null then replace login fragment else do backPressed

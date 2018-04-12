@@ -1,5 +1,6 @@
 package com.yleaf.stas.if_citypizza.fragment;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -13,19 +14,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Resources;
+import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.adapter.ViewPagerAdapter;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
 import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.db.AddDataToDB;
+import com.yleaf.stas.if_citypizza.db.service.AztecaInfoService;
+import com.yleaf.stas.if_citypizza.db.service.AztecaService;
+import com.yleaf.stas.if_citypizza.db.service.CamelotFoodInfoService;
+import com.yleaf.stas.if_citypizza.db.service.CamelotFoodService;
+import com.yleaf.stas.if_citypizza.db.service.PizzaIFInfoService;
+import com.yleaf.stas.if_citypizza.db.service.PizzaIFService;
 
-import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by stas on 26.03.18.
@@ -37,85 +46,135 @@ public class MainFragment extends Fragment {
     private Toolbar toolbar;
     private TabLayout tabLayout;
     private MaterialSearchView searchView;
+    private AtomicInteger atomicInteger;
 
     private static final String TAG = MainFragment.class.getSimpleName();
 
     // Access a Cloud Firestore instance from your Activity
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    ArrayList<Pizza> azteca;
-    ArrayList<Pizza> pizzaIf;
-    ArrayList<Pizza> camelot;
-
-    ArrayList<Manufacturer> aztecaInfo;
-    ArrayList<Manufacturer> pizzaIfInfo;
-    ArrayList<Manufacturer> camelotInfo;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private static Context appContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initCollections();
+        appContext = getContext().getApplicationContext();
+        atomicInteger = new AtomicInteger();
+
+        DataHolder.getData(appContext).clearCollections();
+
         downloadBasicData();
         downloadInfoData();
     }
 
-    private void initCollections() {
-        azteca = new ArrayList<Pizza>();
-        pizzaIf = new ArrayList<Pizza>();
-        camelot = new ArrayList<Pizza>();
-
-        aztecaInfo = new ArrayList<Manufacturer>();
-        pizzaIfInfo = new ArrayList<Manufacturer>();
-        camelotInfo = new ArrayList<Manufacturer>();
-    }
-
-    private void downloadBasicData() {
-        downloadBasicCollection(Resources.AZTECA, azteca);
-        downloadBasicCollection(Resources.PIZZAIF, pizzaIf);
-        downloadBasicCollection(Resources.CAMELOTFOOD, camelot);
+    private  void downloadBasicData() {
+        downloadBasicCollection(Resource.AZTECA);
+        downloadBasicCollection(Resource.CAMELOTFOOD);
+        downloadBasicCollection(Resource.PIZZAIF);
     }
 
     private void downloadInfoData() {
-        downloadInfoCollection(Resources.AZTECAINFO, aztecaInfo);
-        downloadInfoCollection(Resources.PIZZAIFINFO, pizzaIfInfo);
-        downloadInfoCollection(Resources.CAMELOTFOODINFO, camelotInfo);
+        downloadInfoDocuments(Resource.AZTECAINFO);
+        downloadInfoDocuments(Resource.PIZZAIFINFO);
+        downloadInfoDocuments(Resource.CAMELOTFOODINFO);
     }
 
-    private void downloadBasicCollection(String nameCollection, final ArrayList<Pizza> pizzas) {
+    private void downloadBasicCollection(final String nameCollection) {
         db.collection(nameCollection)
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                               // Log.i(TAG, document.getId() + " => " + document.toObject(Pizza.class).getTitle());
-                                pizzas.add(document.toObject(Pizza.class));
-                            }
-                        } else {
-                            Log.i(TAG, "Error getting documents: ", task.getException());
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        switch (nameCollection) {
+                            case Resource.AZTECA:
+                                DataHolder.getData(appContext).getAzteca()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
+                            case Resource.PIZZAIF:
+                                DataHolder.getData(appContext).getPizzaIF()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
+                            case Resource.CAMELOTFOOD:
+                                DataHolder.getData(appContext).getCamelotFood()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
                         }
+                        checkAndIncrementSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "onFailure load collection " + nameCollection);
+                        e.printStackTrace();
                     }
                 });
+
     }
 
-    private void downloadInfoCollection(String nameCollection, final ArrayList<Manufacturer> manufacturers) {
-        db.collection(nameCollection)
+    private void downloadInfoDocuments(final String nameCollection) {
+        db.collection(nameCollection).document("info")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                // Log.i(TAG, document.getId() + " => " + document.toObject(Pizza.class).getTitle());
-                                manufacturers.add(document.toObject(Manufacturer.class));
-                            }
-                        } else {
-                            Log.i(TAG, "Error getting documents: ", task.getException());
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        switch (nameCollection) {
+                            case Resource.AZTECAINFO:
+                                DataHolder.getData(appContext).setAztecaInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
+                            case Resource.PIZZAIFINFO:
+                                DataHolder.getData(appContext).setPizzaIFInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
+                            case Resource.CAMELOTFOODINFO:
+                                DataHolder.getData(appContext).setCamelotFoodInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
                         }
+                        checkAndIncrementSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.i(TAG, "onFailure load info " + nameCollection);
+                        e.printStackTrace();
                     }
                 });
+
+    }
+
+    private void checkAndIncrementSuccess() {
+        if(atomicInteger.incrementAndGet() == 6) {
+            doSomething();
+        }
+
+    }
+
+    private void doSomething() {
+        Log.i(TAG, "AZTEZA " + DataHolder.getData(appContext).getAzteca().size() + "");
+        Log.i(TAG, "PIZZAIF " + DataHolder.getData(appContext).getPizzaIF().size() + "");
+        Log.i(TAG, "CAMELOTFOOD " + DataHolder.getData(appContext).getCamelotFood().size() + "");
+
+        Log.i(TAG, "AZTEZA_INFO " + DataHolder.getData(appContext).getAztecaInfo().getAddress() + "");
+        Log.i(TAG, "PIZZAIF_INFO " + DataHolder.getData(appContext).getPizzaIFInfo().getAddress() + "");
+        Log.i(TAG, "CAMELOTFOOD_INFO " + DataHolder.getData(appContext).getCamelotFoodInfo().getAddress() + "");
+
+       // addDataToDB();  // Data was written
+        setWidgets();
+
+    }
+
+    private void addDataToDB() {
+        AddDataToDB addDataToDB = new AddDataToDB(appContext);
+        Thread thread = new Thread(addDataToDB);
+        thread.start();
+    }
+
+    private void clearDB() {
+        new AztecaService(appContext).deleteAll();
+        new PizzaIFService(appContext).deleteAll();
+        new CamelotFoodService(appContext).deleteAll();
+
+        new AztecaInfoService(appContext).deleteAll();
+        new PizzaIFInfoService(appContext).deleteAll();
+        new CamelotFoodInfoService(appContext).deleteAll();
     }
 
     @Nullable
@@ -123,7 +182,6 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.tab_layout, container, false);
         initWidgets(view);
-       // setWidgets();
 
         return view;
     }
@@ -162,23 +220,22 @@ public class MainFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                String res = "";
-                if(newText != null && !newText.isEmpty()) {
-                    ArrayList<String> listFound = new ArrayList<String>();
+              //  String res = "";
+              //  if(newText != null && !newText.isEmpty()) {
+               //     ArrayList<String> listFound = new ArrayList<String>();
                     // for(String item : listResources) {
                     //    if((item.toLowerCase()).contains(newText.toLowerCase())) {
                     //         listFound.add(item);
                     //        res = res.concat(" " + item);
                     //     }
                     //  }
-
                     // Toast.makeText(getActivity(), res, Toast.LENGTH_SHORT).show();
                     //   mSearchAdapter = new SearchAdapter(listFound);
                     //   mContactRecyclerView.setAdapter(mSearchAdapter);
 
-                } else {
+              //  } else {
                     //  mContactRecyclerView.setAdapter(mAdapter);
-                }
+              //  }
                 return true;
             }
         });
@@ -186,9 +243,9 @@ public class MainFragment extends Fragment {
 
     public static void setupViewPager(ViewPager viewPager, ViewPagerAdapter adapter) {
 
-        adapter.addFrag(PizzaFragment.newInstance(), "Pizza One");
-        adapter.addFrag(PizzaFragment.newInstance(), "Pizza Two");
-        adapter.addFrag(PizzaFragment.newInstance(), "Pizza Three");
+        adapter.addFrag(PizzaFragment.newInstance(Resource.AZTECA), Resource.AZTECA);
+        adapter.addFrag(PizzaFragment.newInstance(Resource.PIZZAIF), Resource.PIZZAIF);
+        adapter.addFrag(PizzaFragment.newInstance(Resource.CAMELOTFOOD), Resource.CAMELOTFOOD);
 
         viewPager.setAdapter(adapter);
     }

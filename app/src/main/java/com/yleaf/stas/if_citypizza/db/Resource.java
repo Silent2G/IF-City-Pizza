@@ -1,7 +1,5 @@
 package com.yleaf.stas.if_citypizza.db;
 
-import com.yleaf.stas.if_citypizza.Resources;
-
 public class Resource {
     public static final String DB_NAME = "com.yleaf.stas.if_citypizza";
     public static final int DB_VERSION = 1;
@@ -10,9 +8,9 @@ public class Resource {
 
     public static final class Pizza {
 
-        public static final String TABLE_NAME_AZTECA_COLLECTION = Resources.AZTECA;
-        public static final String TABLE_NAME_PIZZAIF_COLLECTION = Resources.PIZZAIF;
-        public static final String TABLE_NAME_CAMELOTFOOD_COLLECTION = Resources.CAMELOTFOOD;
+        public static final String TABLE_NAME_AZTECA_COLLECTION = "azteca_if_ua";
+        public static final String TABLE_NAME_PIZZAIF_COLLECTION = "pizza_if_com";
+        public static final String TABLE_NAME_CAMELOTFOOD_COLLECTION = "camelot_food_com";
 
         // Pizza fields
         public static final String TITLE = "title";
@@ -29,7 +27,7 @@ public class Resource {
                         + TABLE_NAME_AZTECA_COLLECTION
                         + " ("
                         + ID
-                        + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + " INTEGER PRIMARY KEY, "
                         + TITLE
                         + " TEXT(255), "
                         + DIAMETERSTANDART
@@ -50,7 +48,7 @@ public class Resource {
                         + TABLE_NAME_PIZZAIF_COLLECTION
                         + " ("
                         + ID
-                        + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + " INTEGER PRIMARY KEY, "
                         + TITLE
                         + " TEXT(255), "
                         + WEIGHT
@@ -69,7 +67,7 @@ public class Resource {
                         + TABLE_NAME_CAMELOTFOOD_COLLECTION
                         + " ("
                         + ID
-                        + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + " INTEGER PRIMARY KEY, "
                         + TITLE
                         + " TEXT(255), "
                         + DIAMETERSTANDART
@@ -94,9 +92,9 @@ public class Resource {
         public static final String LIFECELL = "lifecell";
         public static final String UKRTELECOM = "ukrtelecom";
 
-        public static final String TABLE_NAME_AZTECA_INFO = Resources.AZTECAINFO;
-        public static final String TABLE_NAME_PIZZAIF_INFO = Resources.PIZZAIFINFO;
-        public static final String TABLE_NAME_CAMELOTFOOD_INFO = Resources.CAMELOTFOODINFO;
+        public static final String TABLE_NAME_AZTECA_INFO = "azteca_info";
+        public static final String TABLE_NAME_PIZZAIF_INFO = "pizza_if_info";
+        public static final String TABLE_NAME_CAMELOTFOOD_INFO = "camelot_food_info";
 
         public static final String CREATE_TABLE_AZTECA_INFO =
                 "CREATE TABLE "

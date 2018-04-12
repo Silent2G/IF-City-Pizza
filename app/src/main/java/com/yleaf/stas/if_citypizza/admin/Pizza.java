@@ -30,21 +30,6 @@ public class Pizza {
         this.imageSrc = imageSrc;
     }
 
-    public Pizza(String title, String weight, String priceStandart,
-                 String priceLarge, String diameterStandart,
-                 String diameterLarge, String description,
-                 String imageSrc) {
-
-        this.title = title;
-        this.weight = weight;
-        this.priceStandart = priceStandart;
-        this.priceLarge = priceLarge;
-        this.diameterStandart = diameterStandart;
-        this.diameterLarge = diameterLarge;
-        this.description = description;
-        this.imageSrc = imageSrc;
-    }
-
     public int getId() {
         return id;
     }

@@ -13,12 +13,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Resources;
+import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.admin.Pizza;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedOutputStream;
@@ -32,16 +31,16 @@ import java.util.ArrayList;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
-    private Elements elements;
+    private static Elements elements;
     private static final String TAG = MainActivityAdmin.class.getSimpleName();
 
-    private ProgressBar progressBar;
+    private static ProgressBar progressBar;
     private Button getDataBtn;
     private Button pushDataBtn;
 
-    private ArrayList<Pizza> aztecaList;
-    private ArrayList<Pizza> pizzaIFList;
-    private ArrayList<Pizza> camelotFoodList;
+    private static ArrayList<Pizza> aztecaList;
+    private static ArrayList<Pizza> pizzaIFList;
+    private static ArrayList<Pizza> camelotFoodList;
 
     // Access a Cloud Firestore instance from your Activity
     FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -61,7 +60,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         getDataBtn = findViewById(R.id.get_data_btn);
         pushDataBtn = findViewById(R.id.push_data_btn);
 
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
 
 
         getDataBtn.setOnClickListener(new View.OnClickListener() {
@@ -76,9 +75,9 @@ public class MainActivityAdmin extends AppCompatActivity {
         pushDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addDataToFireStore(aztecaList, Resources.AZTECA);
-                addDataToFireStore(pizzaIFList, Resources.PIZZAIF);
-                addDataToFireStore(camelotFoodList, Resources.CAMELOTFOOD);
+                addDataToFireStore(aztecaList, Resource.AZTECA);
+                addDataToFireStore(pizzaIFList, Resource.PIZZAIF);
+                addDataToFireStore(camelotFoodList, Resource.CAMELOTFOOD);
             }
         });
 
@@ -106,7 +105,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         }
     }
 
-    class AztecaPizza extends AsyncTask<Void, Void, Void> {
+    private static class AztecaPizza extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -122,26 +121,27 @@ public class MainActivityAdmin extends AppCompatActivity {
             try {
                 document = Jsoup.connect("http://azteca.if.ua/pizza/").get();
                 elements = document.select("li.instock");
-                for(Element element : elements) {
-                    String title = element.select("h3").text();
-                    String description = element.select("em").text();
-                    String diameter = element.select("tr[style='height: 25px']")
+                for(int i = 0; i < elements.size(); i++) {
+                    int id = i + 1;
+                    String title = elements.get(i).select("h3").text();
+                    String description = elements.get(i).select("em").text();
+                    String diameter = elements.get(i).select("tr[style='height: 25px']")
                             .select("font[color='#124831']")
                             .text();
-                    String diameterLarge = element.select("tr[style='height: 25px']")
+                    String diameterLarge = elements.get(i).select("tr[style='height: 25px']")
                             .select("font[color='#b80928']")
                             .text();
-                    String priceStandart = element.select("td[style='text-align: center; border-top: 0; border-right: 1px solid #DCD7C1; padding: 5px']")
+                    String priceStandart = elements.get(i).select("td[style='text-align: center; border-top: 0; border-right: 1px solid #DCD7C1; padding: 5px']")
                             .select("span.amount")
                             .text();
-                    String priceLarge = element.select("td[style='text-align: center; border-top: 0; padding: 5px']")
+                    String priceLarge = elements.get(i).select("td[style='text-align: center; border-top: 0; padding: 5px']")
                             .select("span.amount")
                             .text();
-                    String imageSrc = element.select("img").attr("src");
+                    String imageSrc = elements.get(i).select("img").attr("src");
                    // String imagePath = makeImage(imageSrc, Resources.AZTECA);
 
 
-                    aztecaList.add(new Pizza(title, null, priceStandart,
+                    aztecaList.add(new Pizza(id, title, null, priceStandart,
                             priceLarge, diameter, diameterLarge,
                             description, imageSrc));
 
@@ -160,17 +160,14 @@ public class MainActivityAdmin extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressBar.setVisibility(View.INVISIBLE);
             Log.i(TAG, aztecaList.size() + "");
         }
     }
 
-    private class PizzaIF extends AsyncTask<Void, Void, Void> {
+    private static class PizzaIF extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-
             pizzaIFList.clear();
         }
 
@@ -180,24 +177,24 @@ public class MainActivityAdmin extends AppCompatActivity {
             try{
                 document = Jsoup.connect("http://pizza-if.com/").get();
                 elements = document.select("div#main_content").select("div.mcb_item");
-                for (Element element : elements) {
-                    String title = element.select("div.mcbi_info")
+                for(int i = 0; i < elements.size(); i++) {
+                    int id = i + 1;
+                    String title = elements.get(i).select("div.mcbi_info")
                             .select("h3").text();
-                    String description = element.select("div.mcbi_info")
+                    String description = elements.get(i).select("div.mcbi_info")
                             .select("p.m_i_contain").text();
-                    String diameterAndWeight = element.select("div.mcbi_info")
+                    String diameterAndWeight = elements.get(i).select("div.mcbi_info")
                             .select("p[class='m_i_size mis_select']")
                             .select("span.mis_lift").text();
-                    String priceStandart = element
+                    String priceStandart = elements.get(i)
                             .select("div.mcbi_info")
                             .select("div[class='PriceBackground']")
                             .select("span.mis_right").text();
-                    String imgSrc = element.select("img")
+                    String imgSrc = elements.get(i).select("img")
                             .attr("src");
                    // String imagePath = makeImage(imgSrc, Resources.PIZZAIF);
 
-
-                    pizzaIFList.add(new Pizza(title, parserPizzaIfWeight(diameterAndWeight), priceStandart,
+                    pizzaIFList.add(new Pizza(id, title, parserPizzaIfWeight(diameterAndWeight), priceStandart,
                             null, parsePizzaIfDiameter(diameterAndWeight), null,
                             description, imgSrc));
 
@@ -216,18 +213,15 @@ public class MainActivityAdmin extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressBar.setVisibility(View.INVISIBLE);
             Log.i(TAG, pizzaIFList.size() + "");
         }
     }
 
-    public class CamelotFood extends AsyncTask<Void, Void, Void> {
+    private static class CamelotFood extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-
             camelotFoodList.clear();
         }
 
@@ -239,24 +233,25 @@ public class MainActivityAdmin extends AppCompatActivity {
                 document = Jsoup.connect("http://camelot-food.com/menu/pizza").get();
                 elements = document.select("div#advantages2").select("div.product");
 
-                for(Element element : elements) {
-                    String title = element.select("div.text")
+                for(int i = 0; i < elements.size(); i++) {
+                    int id = i + 1;
+                    String title = elements.get(i).select("div.text")
                             .select("h3").text();
-                    String description = element.select("div.text")
+                    String description = elements.get(i).select("div.text")
                             .select("div.description").text();
-                    String diameter = element.select("div.text")
+                    String diameter = elements.get(i).select("div.text")
                             .select("p[style='text-align: center; font-size: 15px; color: #7F7F7F; font-weight: 500;']")
                             .select("span").text();
-                    String priceStandart = element.select("div.text")
+                    String priceStandart = elements.get(i).select("div.text")
                             .select("div.input-group")
                             .select("p[class='price sale-price-block']").text();
-                    String imgSrc = element.select("img")
+                    String imgSrc = elements.get(i).select("img")
                             .attr("src");
 
                     diameter = getDigits(diameter).concat(" см.");
                     imgSrc = "http://camelot-food.com".concat(imgSrc);
 
-                    camelotFoodList.add(new Pizza(title, null, priceStandart,
+                    camelotFoodList.add(new Pizza(id, title, null, priceStandart,
                             null, diameter, null, description,
                             imgSrc));
 
@@ -277,15 +272,16 @@ public class MainActivityAdmin extends AppCompatActivity {
         }
     }
 
-    private String parserPizzaIfWeight(String string) {
+    private static String parserPizzaIfWeight(String string) {
         String result = null;
         if(string.length() > 10) {
-            result = string.substring(7,string.length()-1);
+            result = getDigits(string.substring(7,string.length()-1));
+            result = result.concat(" гр.");
         }
         return result;
     }
 
-    private String getDigits(String string) {
+    private static String getDigits(String string) {
         String result = "";
         char[] array = string.toCharArray();
 
@@ -297,7 +293,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         return result;
     }
 
-    private String parsePizzaIfDiameter(String string) {
+    private static String parsePizzaIfDiameter(String string) {
         String result = null;
         if(string.length() >= 6) {
             result = string.substring(0, 5);

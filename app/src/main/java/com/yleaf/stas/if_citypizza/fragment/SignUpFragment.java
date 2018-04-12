@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Resources;
+import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.activity.LoginActivity;
 
 import java.util.regex.Matcher;
@@ -145,7 +145,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         String getConfirmPassword = confirmPassword.getText().toString();
 
         // Pattern match for email id
-        Pattern p = Pattern.compile(Resources.regEx);
+        Pattern p = Pattern.compile(Resource.regEx);
         Matcher m = p.matcher(getEmailId);
 
         // Check if all strings are null or not

@@ -35,7 +35,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.Resources;
+import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.activity.MainActivity;
 
 import java.util.regex.Matcher;
@@ -240,7 +240,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         String getPassword = password.getText().toString();
 
         // Check patter for email id
-        Pattern p = Pattern.compile(Resources.regEx);
+        Pattern p = Pattern.compile(Resource.regEx);
 
         Matcher m = p.matcher(getEmailId);
 
