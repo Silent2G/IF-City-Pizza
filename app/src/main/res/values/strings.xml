@@ -20,4 +20,10 @@
     <string name="already_user">Already have Account? Login here.</string>
     <string name="get_data">Get Data</string>
     <string name="push_data">Push data</string>
+    <string name="make_call">Зателефонувати</string>
+    <string name="add_to_cart">В кошик</string>
+    <string name="lifecell">Lifecell call</string>
+    <string name="vodafone">Vodafone call</string>
+    <string name="kyivstar">Kyivstar call</string>
+    <string name="ukrtelecom">Ukrtelecom call</string>
 </resources>

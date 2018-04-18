@@ -3,15 +3,35 @@ package com.yleaf.stas.if_citypizza.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
+import com.yleaf.stas.if_citypizza.Resource;
+import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.db.AddDataToDB;
+import com.yleaf.stas.if_citypizza.db.service.AztecaInfoService;
+import com.yleaf.stas.if_citypizza.db.service.AztecaService;
+import com.yleaf.stas.if_citypizza.db.service.CamelotFoodInfoService;
+import com.yleaf.stas.if_citypizza.db.service.CamelotFoodService;
+import com.yleaf.stas.if_citypizza.db.service.PizzaIFInfoService;
+import com.yleaf.stas.if_citypizza.db.service.PizzaIFService;
 import com.yleaf.stas.if_citypizza.fragment.MainFragment;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by stas on 26.03.18.
@@ -21,12 +41,34 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    // Access a Cloud Firestore instance from your Activity
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+    private static Context appContext;
+    private AtomicInteger atomicInteger;
+
+    private ProgressBar progressBar;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
 
-        createFragment();
+        if(savedInstanceState != null) {
+            createFragment();
+            progressBar = findViewById(R.id.progressBarContainer);
+            progressBar.setVisibility(View.GONE);
+        } else {
+            atomicInteger = new AtomicInteger();
+            appContext = getApplicationContext();
+            progressBar = findViewById(R.id.progressBarContainer);
+            progressBar.setVisibility(View.VISIBLE);
+
+            downloadData();
+            Log.i(TAG, "NULL savedInstanceState");
+        }
+
+        Log.i(TAG, "MAIN ACTIVITY");
     }
 
     public static Intent newIntent(Context packageContext) {
@@ -43,6 +85,124 @@ public class MainActivity extends AppCompatActivity {
             fm.beginTransaction()
                     .add(R.id.fragment_container, fragment)
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    private void downloadData() {
+        downloadBasicData();
+        downloadInfoData();
+    }
+
+    private  void downloadBasicData() {
+        downloadBasicCollection(Resource.AZTECA);
+        downloadBasicCollection(Resource.CAMELOTFOOD);
+        downloadBasicCollection(Resource.PIZZAIF);
+    }
+
+    private void downloadInfoData() {
+        downloadInfoDocuments(Resource.AZTECAINFO);
+        downloadInfoDocuments(Resource.PIZZAIFINFO);
+        downloadInfoDocuments(Resource.CAMELOTFOODINFO);
+    }
+
+    private void downloadBasicCollection(final String nameCollection) {
+        db.collection(nameCollection)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        switch (nameCollection) {
+                            case Resource.AZTECA:
+                                DataHolder.getData(appContext).getAzteca()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
+                            case Resource.PIZZAIF:
+                                DataHolder.getData(appContext).getPizzaIF()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
+                            case Resource.CAMELOTFOOD:
+                                DataHolder.getData(appContext).getCamelotFood()
+                                        .addAll(queryDocumentSnapshots.toObjects(Pizza.class));
+                                break;
+                        }
+                        checkAndIncrementSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure load collection " + nameCollection);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void downloadInfoDocuments(final String nameCollection) {
+        db.collection(nameCollection).document("info")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        switch (nameCollection) {
+                            case Resource.AZTECAINFO:
+                                DataHolder.getData(appContext).setAztecaInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
+                            case Resource.PIZZAIFINFO:
+                                DataHolder.getData(appContext).setPizzaIFInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
+                            case Resource.CAMELOTFOODINFO:
+                                DataHolder.getData(appContext).setCamelotFoodInfo(documentSnapshot.toObject(Manufacturer.class));
+                                break;
+                        }
+                        checkAndIncrementSuccess();
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i(TAG, "onFailure load info " + nameCollection);
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void checkAndIncrementSuccess() {
+        if(atomicInteger.incrementAndGet() == 6) {
+            progressBar.setVisibility(View.GONE);
+            createFragment();
+
+            // addDataToDB();  // Data was written
+        }
+
+    }
+
+    private void clearDB() {
+        new AztecaService(appContext).deleteAll();
+        new PizzaIFService(appContext).deleteAll();
+        new CamelotFoodService(appContext).deleteAll();
+
+        new AztecaInfoService(appContext).deleteAll();
+        new PizzaIFInfoService(appContext).deleteAll();
+        new CamelotFoodInfoService(appContext).deleteAll();
+    }
+
+    private void addDataToDB() {
+        AddDataToDB addDataToDB = new AddDataToDB(appContext);
+        Thread thread = new Thread(addDataToDB);
+        thread.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        int count = getSupportFragmentManager().getBackStackEntryCount();
+
+        if (count == 0) {
+            super.onBackPressed();
+        } else {
+            getSupportFragmentManager().popBackStack();
         }
     }
 

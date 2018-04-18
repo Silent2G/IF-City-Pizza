@@ -47,6 +47,39 @@ public final class DataHolder {
 
     }
 
+    public Pizza getPizzaById(String collectionName, int id) {
+        switch (collectionName) {
+            case Resource.AZTECA:
+                return searchById(azteca, id);
+            case Resource.PIZZAIF:
+                return searchById(pizzaIF, id);
+            case Resource.CAMELOTFOOD:
+                return searchById(camelotFood, id);
+        }
+
+        return null;
+    }
+
+    public Manufacturer getManufacturerByName(String collectionName) {
+        switch (collectionName) {
+            case Resource.AZTECA:
+                return aztecaInfo;
+            case Resource.PIZZAIF:
+                return pizzaIFInfo;
+            case Resource.CAMELOTFOOD:
+                return camelotFoodInfo;
+        }
+        return null;
+    }
+
+    private Pizza searchById(ArrayList<Pizza> pizzas, int id) {
+        for (Pizza pizza : pizzas) {
+            if(pizza.getId() == id)
+                return pizza;
+        }
+        return null;
+    }
+
     public ArrayList<Pizza> getAzteca() {
         return azteca;
     }

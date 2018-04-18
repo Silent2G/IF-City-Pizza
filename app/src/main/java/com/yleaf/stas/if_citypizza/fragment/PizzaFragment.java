@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yleaf.stas.if_citypizza.DataHolder;
@@ -35,6 +35,7 @@ public class PizzaFragment extends Fragment {
     private static final String TAG = PizzaFragment.class.getSimpleName();
 
     private static final String KEY = "Container";
+    private String domain;
     private Context appContext;
 
     @Override
@@ -43,9 +44,9 @@ public class PizzaFragment extends Fragment {
 
         appContext = getContext().getApplicationContext();
 
-        String key = getArguments().getString(KEY);
-        if(key != null) {
-            choseContainer(key);
+        domain = getArguments().getString(KEY);
+        if(domain != null) {
+            choseContainer();
         } else {
             Log.i(TAG, "KEY IS NULL");
         }
@@ -66,7 +67,7 @@ public class PizzaFragment extends Fragment {
         return view;
     }
 
-    private void choseContainer(String domain) {
+    private void choseContainer() {
         switch (domain) {
             case Resource.AZTECA:
                 pizzas = DataHolder.getData(appContext).getAzteca();
@@ -78,6 +79,18 @@ public class PizzaFragment extends Fragment {
                 pizzas = DataHolder.getData(appContext).getCamelotFood();
                 break;
         }
+    }
+
+    private Fragment choseFragment(int pizzaId) {
+        switch (domain) {
+            case Resource.AZTECA:
+                return AztecaFragment.newInstance(pizzaId);
+            case Resource.PIZZAIF:
+                return PizzaIFFragment.newInstance(pizzaId);
+            case Resource.CAMELOTFOOD:
+                return CamelotFoodFragment.newInstance(pizzaId);
+        }
+        return null;
     }
 
     private class PizzaHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -108,7 +121,12 @@ public class PizzaFragment extends Fragment {
 
         @Override
         public void onClick(View v) {
-            Toast.makeText(appContext, String.valueOf(myPizza.getId()),Toast.LENGTH_SHORT).show();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            fm.beginTransaction()
+                    .add(R.id.fragment_container,
+                            choseFragment(myPizza.getId()))
+                    .addToBackStack(null)
+                    .commit();
         }
 
 
@@ -146,4 +164,5 @@ public class PizzaFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+
 }

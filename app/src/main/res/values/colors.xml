@@ -7,4 +7,9 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="button_selectorcolor">#9E9E9E</color>
+    <color name="color_red">#EE4D4D</color>
+    <color name="green_temp">#23A96E</color>
+    <color name="green_dark">#159204</color>
+    <color name="bright_green">#02D8B0</color>
+    <color name="button_green">#10a54a</color>
 </resources>
