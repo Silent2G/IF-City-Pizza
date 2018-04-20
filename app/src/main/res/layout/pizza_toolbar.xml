@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/pizza_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:layout_collapseMode="pin">
+
+        <RelativeLayout
+            android:id="@+id/pizza_toolbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@null">
+
+
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="34dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                app:srcCompat="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/pizza_title"
+                android:layout_width="361dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="0dp"
+                android:gravity="center"
+                android:text="Pizza title"
+                android:textColor="@color/black"
+                android:textSize="28sp" />
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+</merge>

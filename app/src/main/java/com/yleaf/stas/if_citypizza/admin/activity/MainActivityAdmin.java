@@ -142,11 +142,11 @@ public class MainActivityAdmin extends AppCompatActivity {
 
 
                     aztecaList.add(new Pizza(id, title, null, priceStandart,
-                            priceLarge, diameter, diameterLarge,
+                            priceLarge, getDigits(diameter).concat("см."), getDigits(diameterLarge).concat("см."),
                             description, imageSrc));
 
                     Log.i(TAG, title + "\n" + priceStandart + "\n" + priceLarge + "\n"
-                            + description + "\n" + diameter + "\n" + diameterLarge
+                            + description + "\n" + getDigits(diameter).concat("см.") + "\n" + getDigits(diameterLarge).concat("см.")
                             + "\n" + imageSrc);
                 }
 

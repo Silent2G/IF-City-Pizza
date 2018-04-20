@@ -67,9 +67,9 @@
                 tools:ignore="ContentDescription" />
 
             <TextView
+                android:id="@+id/tv_description_azteca"
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="20dp"
-                android:id="@+id/tv_description_azteca"
                 android:layout_width="300dp"
                 android:layout_gravity="center"
                 android:textColor="@color/black"
@@ -83,25 +83,62 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_size_standart_azteca"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="#009100"
-                    android:textSize="20sp"
                     android:layout_weight="1"
-                    android:text="Size standart" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_size_big_azteca"
-                    android:layout_width="wrap_content"
+                    <ImageButton
+                        android:contentDescription="diameter_standart"
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_do_not_disturb_alt" />
+
+                    <TextView
+                        android:id="@+id/tv_size_standart_azteca"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#009100"
+                        android:textSize="20sp"
+                        android:text="Size standart"/>
+
+                </LinearLayout>
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="#EE4D4D"
-                    android:textSize="23sp"
                     android:layout_weight="1"
-                    android:text="Size big"/>
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:contentDescription="diameter_big"
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_do_not_disturb_alt" />
+
+                    <TextView
+                        android:id="@+id/tv_size_big_azteca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#EE4D4D"
+                        android:textSize="22sp"
+                        android:text="Size big"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -110,25 +147,57 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_price_standart_azteca"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="#009100"
-                    android:textSize="20sp"
                     android:layout_weight="1"
-                    android:text="Price standart" />
+                    android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tv_price_big_azteca"
-                    android:layout_width="wrap_content"
+                    <ImageButton
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_account_balance_wallet" />
+
+                    <TextView
+                        android:id="@+id/tv_price_standart_azteca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#009100"
+                        android:textSize="22sp"
+                        android:text="Price standa"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center"
-                    android:textColor="#EE4D4D"
-                    android:textSize="23sp"
                     android:layout_weight="1"
-                    android:text="Price big"/>
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_account_balance_wallet" />
+
+                    <TextView
+                        android:id="@+id/tv_price_big_azteca"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:textColor="#EE4D4D"
+                        android:textSize="22sp"
+                        android:text="Price big"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -144,11 +213,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="10dp"
-                    android:layout_weight="1"
                     android:layout_marginLeft="10dp"
                     android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
                     android:text="@string/make_call"
-                    android:theme="@style/AppTheme.Button"/>
+                    android:background="@drawable/azteca_button"
+                    android:textColor="@drawable/azteca_text_color"/>
 
                 <Button
                     android:id="@+id/button_add_azteca"
@@ -159,10 +230,11 @@
                     android:layout_weight="1"
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
                     android:text="@string/add_to_cart"
-                    android:theme="@style/AppTheme.Button"/>
+                    android:background="@drawable/azteca_button"
+                    android:textColor="@drawable/azteca_text_color"/>
             </LinearLayout>
-
 
         </LinearLayout>
 

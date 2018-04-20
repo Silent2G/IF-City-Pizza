@@ -1,36 +1,34 @@
 package com.yleaf.stas.if_citypizza.fragment;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.support.v7.widget.Toolbar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
-import com.yleaf.stas.if_citypizza.activity.MainActivity;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
 import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.dialog.FourNumDialog;
 
 public class AztecaFragment extends Fragment {
 
     private static final String TAG = AztecaFragment.class.getSimpleName();
     private final static String PIZZA_ID = "pizzaId";
+    private final static int REQUEST_CODE = 0;
+    private final static String DIALOG_CALL = "call";
 
     private Context appContext;
     private Pizza pizza;
@@ -48,6 +46,8 @@ public class AztecaFragment extends Fragment {
     private Button buttonCall;
     private Button buttonAddToCart;
 
+  //  private RelativeLayout relativeLayout;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +60,7 @@ public class AztecaFragment extends Fragment {
 
     private void initWidgets(View view) {
         toolbar = view.findViewById(R.id.toolbar_azteca);
+      //  relativeLayout = view.findViewById(R.id.pizza_toolbar_container);
         imageViewHeader = view.findViewById(R.id.image_header_azteca);
         textViewDescription = view.findViewById(R.id.tv_description_azteca);
         textViewSizeStandart = view.findViewById(R.id.tv_size_standart_azteca);
@@ -77,6 +78,12 @@ public class AztecaFragment extends Fragment {
         View view = inflater.inflate(R.layout.azteca_fragment_layout, container, false);
 
         initWidgets(view);
+
+    //    View inflate = getLayoutInflater().inflate(R.layout.pizza_toolbar, container, false);
+    //    relativeLayout.removeAllViews();
+    //    relativeLayout.addView(inflate);
+
+    //    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
         toolbar.setTitle(pizza.getTitle());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -102,7 +109,10 @@ public class AztecaFragment extends Fragment {
         buttonCall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                makeDialog();
+                FragmentManager fm = getFragmentManager();
+                FourNumDialog dialog = FourNumDialog.newInstance(manufacturer);
+                dialog.setTargetFragment(AztecaFragment.this, REQUEST_CODE);
+                dialog.show(fm, DIALOG_CALL);
             }
         });
 
@@ -114,35 +124,6 @@ public class AztecaFragment extends Fragment {
         });
 
         return view;
-    }
-
-    private void makeDialog() {
-        final Dialog dialog = new Dialog(getActivity());
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.dialog_layout);
-      //  TextView textView1 = dialog.findViewById(R.id.text);
-      //  textView1.setText("Stas");
-      //  dialog.setCanceledOnTouchOutside(false);
-     //   dialog.setCancelable(false);
-
-    //    dialog.findViewById(R.id.ok).setOnClickListener(new View.OnClickListener() {
-    //        @Override
-    //        public void onClick(View v) {
-    //            dialog.dismiss();
-    //        }
-    //    });
-
-   //     dialog.findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener() {
-   //         @Override
-   //         public void onClick(View v) {
-   //             Toast.makeText(WelcomeActivity.this,"Press Ok =)", Toast.LENGTH_SHORT).show();
-   //         }
-   //     });
-
-        dialog.show();
     }
 
     @Override
