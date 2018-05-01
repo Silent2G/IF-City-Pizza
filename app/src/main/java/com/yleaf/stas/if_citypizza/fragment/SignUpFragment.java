@@ -24,10 +24,15 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
+import com.yleaf.stas.if_citypizza.RxEditText;
 import com.yleaf.stas.if_citypizza.activity.LoginActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func6;
 
 /**
  * Created by stas on 22.03.18.
@@ -60,6 +65,34 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.signup_layout, container, false);
         initViews();
+
+        signUpButton.setEnabled(false);
+
+        // rxJava
+        Observable<String> fullNameObservable = RxEditText.getTextWatcherObservable(fullName);
+        Observable<String> emailIdObservable = RxEditText.getTextWatcherObservable(emailId);
+        Observable<String> mobileNumberObservable = RxEditText.getTextWatcherObservable(mobileNumber);
+        Observable<String> locationObservable = RxEditText.getTextWatcherObservable(location);
+        Observable<String> passwordObservable = RxEditText.getTextWatcherObservable(password);
+        Observable<String> confirmPasswordObservable = RxEditText.getTextWatcherObservable(confirmPassword);
+
+        Observable.combineLatest(fullNameObservable, emailIdObservable, mobileNumberObservable, locationObservable,
+                passwordObservable, confirmPasswordObservable, new Func6<String, String, String, String, String, String, Boolean>() {
+                    @Override
+                    public Boolean call(String s, String s2, String s3, String s4, String s5, String s6) {
+                        if(s.isEmpty() || s2.isEmpty() || s3.isEmpty() || s4.isEmpty() || s5.isEmpty() || s6.isEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                }).subscribe(new Action1<Boolean>() {
+                    @Override
+                    public void call(Boolean aBoolean) {
+                        signUpButton.setEnabled(aBoolean);
+                    }
+                });
+
         setListeners();
         return view;
     }
@@ -121,11 +154,9 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof FirebaseAuthWeakPasswordException) {
                     new CustomToast().Show_Toast(getActivity(), view, "Your Password Less Than 6 Chars");
-                }
-                if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    new CustomToast().Show_Toast(getActivity(), view, "Your Email Is Incorrect");
-                }
-                if (e instanceof FirebaseAuthUserCollisionException) {
+                } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                    new CustomToast().Show_Toast(getActivity(), view, "Your Email Is Incorrect zzzz");
+                } else if (e instanceof FirebaseAuthUserCollisionException) {
                     new CustomToast().Show_Toast(getActivity(), view, "This User Is Exist");
                 }
             }
@@ -147,19 +178,8 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
         Pattern p = Pattern.compile(Resource.regEx);
         Matcher m = p.matcher(getEmailId);
 
-        // Check if all strings are null or not
-        if (getFullName.isEmpty()
-                || getEmailId.isEmpty()
-                || getMobileNumber.isEmpty()
-                || getLocation.isEmpty()
-                || getPassword.isEmpty()
-                || getConfirmPassword.isEmpty())
-
-            new CustomToast().Show_Toast(getActivity(), view,
-                    "All fields are required.");
-
             // Check if email id valid or not
-        else if (!m.find())
+        if (!m.find())
             new CustomToast().Show_Toast(getActivity(), view,
                     "Your Email Id is Invalid.");
 

@@ -16,7 +16,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
-import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.model.Pizza;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -230,9 +230,9 @@ public class MainActivityAdmin extends AppCompatActivity {
                     // String imagePath = makeImage(imageSrc, Resources.AZTECA);
 
 
-                    aztecaList.add(new Pizza(id, title, null, priceStandart,
-                            priceLarge, diameter, diameterLarge,
-                            description, imageSrc));
+                    aztecaList.add(new Pizza(id, title, null, getDigits(priceStandart).concat(" грн."),
+                            getDigits(priceLarge).concat(" грн."), getDigits(diameter).concat(" см."),
+                            getDigits(diameterLarge).concat(" см."), description, imageSrc));
 
                     Log.i(TAG, title + "\n" + priceStandart + "\n" + priceLarge + "\n"
                             + description + "\n" + diameter + "\n" + diameterLarge

@@ -3,7 +3,8 @@ package com.yleaf.stas.if_citypizza;
 import android.content.Context;
 
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
-import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.model.Pizza;
+import com.yleaf.stas.if_citypizza.model.ReservedPizza;
 
 import java.util.ArrayList;
 
@@ -20,12 +21,20 @@ public final class DataHolder {
     private Manufacturer pizzaIFInfo;
     private Manufacturer camelotFoodInfo;
 
+    private ArrayList<ReservedPizza> aztecaReserved;
+    private ArrayList<ReservedPizza> pizzaIFReserved;
+    private ArrayList<ReservedPizza> camelotFoodReserved;
+
     private DataHolder(Context appContext) {
         this.appContext = appContext;
 
         this.azteca = new ArrayList<>();
         this.pizzaIF = new ArrayList<>();
         this.camelotFood = new ArrayList<>();
+
+        this.aztecaReserved = new ArrayList<>();
+        this.pizzaIFReserved = new ArrayList<>();
+        this.camelotFoodReserved = new ArrayList<>();
     }
 
     public static DataHolder getData(Context context) {
@@ -114,5 +123,17 @@ public final class DataHolder {
 
     public void setCamelotFoodInfo(Manufacturer camelotFoodInfo) {
         this.camelotFoodInfo = camelotFoodInfo;
+    }
+
+    public ArrayList<ReservedPizza> getAztecaReserved() {
+        return aztecaReserved;
+    }
+
+    public ArrayList<ReservedPizza> getPizzaIFReserved() {
+        return pizzaIFReserved;
+    }
+
+    public ArrayList<ReservedPizza> getCamelotFoodReserved() {
+        return camelotFoodReserved;
     }
 }

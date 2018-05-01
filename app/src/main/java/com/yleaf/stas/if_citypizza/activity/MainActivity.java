@@ -24,7 +24,7 @@ import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
-import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.db.AddDataToDB;
 import com.yleaf.stas.if_citypizza.db.service.AztecaInfoService;
 import com.yleaf.stas.if_citypizza.db.service.AztecaService;
@@ -185,6 +185,7 @@ public class MainActivity extends AppCompatActivity {
             progressBar.setVisibility(View.GONE);
             createFragment();
 
+            // clearDB();
             // addDataToDB();  // Data was written
 
             listenObjects(Resource.AZTECAINFO, aztecaInfo);

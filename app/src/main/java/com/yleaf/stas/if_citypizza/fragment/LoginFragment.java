@@ -36,10 +36,15 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.yleaf.stas.if_citypizza.CustomToast;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
+import com.yleaf.stas.if_citypizza.RxEditText;
 import com.yleaf.stas.if_citypizza.activity.MainActivity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import rx.Observable;
+import rx.functions.Action1;
+import rx.functions.Func2;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -101,22 +106,20 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                if(e instanceof FirebaseAuthInvalidUserException){
-                    loginLayout.startAnimation(shakeAnimation);
-                    new CustomToast().Show_Toast(getActivity(), view, "This User Not Found");
-                }
-                if( e instanceof FirebaseAuthInvalidCredentialsException){
-                    loginLayout.startAnimation(shakeAnimation);
-                    new CustomToast().Show_Toast(getActivity(), view, "The Password Is Invalid");
-                }
-                if(e instanceof FirebaseNetworkException){
-                    loginLayout.startAnimation(shakeAnimation);
-                    new CustomToast().Show_Toast(getActivity(), view, "Please Check Your Connection");
-                }
-            }
-        });
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        if(e instanceof FirebaseAuthInvalidUserException) {
+                            loginLayout.startAnimation(shakeAnimation);
+                            new CustomToast().Show_Toast(getActivity(), view, "This User Not Found");
+                        } else if( e instanceof FirebaseAuthInvalidCredentialsException) {
+                            loginLayout.startAnimation(shakeAnimation);
+                            new CustomToast().Show_Toast(getActivity(), view, "The Password Is Invalid");
+                        } else if(e instanceof FirebaseNetworkException){
+                            loginLayout.startAnimation(shakeAnimation);
+                            new CustomToast().Show_Toast(getActivity(), view, "Please Check Your Connection");
+                        }
+                    }
+                });
     }
 
     @Override
@@ -124,6 +127,28 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.login_layout, container, false);
         initViews();
+        loginButton.setEnabled(false);
+
+        // rxJava
+        Observable<String> emailObservable = RxEditText.getTextWatcherObservable(emailid);
+        Observable<String> passwordObservable = RxEditText.getTextWatcherObservable(password);
+
+        Observable.combineLatest(emailObservable, passwordObservable, new Func2<String, String, Boolean>() {
+            @Override
+            public Boolean call(String s, String s2) {
+                if(s.isEmpty() || s2.isEmpty()) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            }).subscribe(new Action1<Boolean>() {
+                @Override
+                public void call(Boolean aBoolean) {
+                    loginButton.setEnabled(aBoolean);
+                }
+            });
+
         setListeners();
         return view;
     }
@@ -141,8 +166,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginLayout = view.findViewById(R.id.login_layout);
 
         // Load ShakeAnimation
-        shakeAnimation = AnimationUtils.loadAnimation(getActivity(),
-                R.anim.shake);
+        shakeAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.shake);
 
     }
 
@@ -241,14 +265,8 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
 
         Matcher m = p.matcher(getEmailId);
 
-        // Check for both field is empty or not
-        if (getEmailId.isEmpty() || getPassword.isEmpty()) {
-            loginLayout.startAnimation(shakeAnimation);
-            new CustomToast().Show_Toast(getActivity(), view,
-                    "Enter both credentials.");
-        }
         // Check if email id is valid or not
-        else if (!m.find()) {
+        if (!m.find()) {
             loginLayout.startAnimation(shakeAnimation);
             new CustomToast().Show_Toast(getActivity(), view,
                     "Your Email Id is Invalid.");

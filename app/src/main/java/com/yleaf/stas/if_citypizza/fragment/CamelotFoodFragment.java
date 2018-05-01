@@ -18,8 +18,7 @@ import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
-import com.yleaf.stas.if_citypizza.admin.Pizza;
-import com.yleaf.stas.if_citypizza.dialog.FourNumDialog;
+import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.dialog.TwoNumDialog;
 
 public class CamelotFoodFragment extends Fragment {

@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
-import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.db.Resource;
 import com.yleaf.stas.if_citypizza.db.dao.core.DAO;
 

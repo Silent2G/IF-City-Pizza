@@ -1,4 +1,4 @@
-package com.yleaf.stas.if_citypizza.admin;
+package com.yleaf.stas.if_citypizza.model;
 
 public class Pizza {
 

@@ -2,7 +2,7 @@ package com.yleaf.stas.if_citypizza.db.service;
 
 import android.content.Context;
 
-import com.yleaf.stas.if_citypizza.admin.Pizza;
+import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.db.dao.AztecaDAO;
 import com.yleaf.stas.if_citypizza.db.service.core.OpenDBService;
 import com.yleaf.stas.if_citypizza.db.service.core.Service;
