@@ -18,6 +18,7 @@ import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.dialog.ChooseSizeAzteca;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.dialog.FourNumDialog;
 
@@ -110,7 +111,10 @@ public class AztecaFragment extends Fragment {
         buttonAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                FragmentManager fm = getFragmentManager();
+                ChooseSizeAzteca dialog = ChooseSizeAzteca.newInstance(pizzaId);
+                dialog.setTargetFragment(AztecaFragment.this, REQUEST_CODE);
+                dialog.show(fm, DIALOG_CALL);
             }
         });
 

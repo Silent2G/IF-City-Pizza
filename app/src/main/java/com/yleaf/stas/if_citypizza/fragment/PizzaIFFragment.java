@@ -6,12 +6,14 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.yleaf.stas.if_citypizza.DataHolder;
@@ -20,6 +22,7 @@ import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.admin.Manufacturer;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.dialog.FourNumDialog;
+import com.yleaf.stas.if_citypizza.model.ReservedPizza;
 
 public class PizzaIFFragment extends Fragment {
 
@@ -106,7 +109,10 @@ public class PizzaIFFragment extends Fragment {
         buttonAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                DataHolder.getData(appContext).getPizzaIFReserved().add(new ReservedPizza(pizzaId, false));
+                Toast.makeText(getActivity(), "35", Toast.LENGTH_SHORT).show();
 
+                Log.i(TAG, String.valueOf(DataHolder.getData(appContext).getPizzaIFReserved().size()));
             }
         });
 
