@@ -6,8 +6,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ProgressBar;
+import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -28,15 +30,27 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class MainActivityAdmin extends AppCompatActivity {
 
     private static Elements elements;
     private static final String TAG = MainActivityAdmin.class.getSimpleName();
 
-    private static ProgressBar progressBar;
-    private Button getDataBtn;
-    private Button pushDataBtn;
+    private static Button getDataBtn;
+    private static Button pushDataBtn;
+
+    private AtomicInteger atomicInteger;
+    private int countSuccess = 0;
+
+    private ImageView imagePizzaGetData;
+    private static ImageView imagePizzaPushData;
+    private static ImageView imagePizzaDownload;
+    private static ImageView imagePizzaPizza;
+    private ImageView imagePizzaMan;
+
+    private static Animation animationTrance;
+    private static Animation animationRotate;
 
     private static ArrayList<Pizza> aztecaList;
     private static ArrayList<Pizza> pizzaIFList;
@@ -56,12 +70,27 @@ public class MainActivityAdmin extends AppCompatActivity {
         camelotFoodList = new ArrayList<Pizza>();
 
         // init widgets
-        progressBar = findViewById(R.id.progressBar);
         getDataBtn = findViewById(R.id.get_data_btn);
         pushDataBtn = findViewById(R.id.push_data_btn);
 
-        progressBar.setVisibility(View.INVISIBLE);
+        pushDataBtn.setEnabled(false);
 
+        imagePizzaGetData = findViewById(R.id.image_pizza_get_data);
+        imagePizzaPushData = findViewById(R.id.image_pizza_push_data);
+        imagePizzaDownload = findViewById(R.id.image_pizza_download);
+        imagePizzaPizza = findViewById(R.id.image_pizza_pizza);
+        imagePizzaMan = findViewById(R.id.image_pizza_man);
+
+        imagePizzaPushData.setVisibility(View.INVISIBLE);
+        imagePizzaDownload.setVisibility(View.INVISIBLE);
+        imagePizzaPizza.setVisibility(View.INVISIBLE);
+        imagePizzaMan.setVisibility(View.INVISIBLE);
+
+        animationTrance = AnimationUtils.loadAnimation(this,R.anim.trance);
+        animationRotate = AnimationUtils.loadAnimation(this,R.anim.rotate);
+
+        //firstAnimation
+        getDataAnimationStart();
 
         getDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,19 +98,79 @@ public class MainActivityAdmin extends AppCompatActivity {
                 new AztecaPizza().execute();
                 new PizzaIF().execute();
                 new CamelotFood().execute();
+
+                // animation
+                getDataAnimationStop();
+                downloadAnimationStart();
             }
+
         });
 
         pushDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                atomicInteger = new AtomicInteger();
+                makeSuccessNumber();
+
                 addDataToFireStore(aztecaList, Resource.AZTECA);
                 addDataToFireStore(pizzaIFList, Resource.PIZZAIF);
                 addDataToFireStore(camelotFoodList, Resource.CAMELOTFOOD);
+
+                // animation
+                pushDataAnimationStop();
+                downloadAnimationStart();
+                imagePizzaPizza.setVisibility(View.GONE);
             }
         });
 
     }
+
+    private void checkAndIncrementSuccess() {
+        if (atomicInteger.incrementAndGet() == countSuccess) {
+            downloadAnimationStop();
+            imagePizzaMan.setVisibility(View.VISIBLE);
+            pushDataBtn.setEnabled(false);
+        }
+    }
+
+    private void makeSuccessNumber() {
+        countSuccess = aztecaList.size() + pizzaIFList.size() + camelotFoodList.size();
+    }
+
+    // animation methods -----------------------------------
+
+    private void getDataAnimationStart() {
+        animationTrance.setRepeatCount(Animation.INFINITE);
+        imagePizzaGetData.startAnimation(animationTrance);
+    }
+
+    private void getDataAnimationStop() {
+        imagePizzaGetData.clearAnimation();
+        imagePizzaGetData.setVisibility(View.GONE);
+    }
+
+    private static void pushDataAnimationStart() {
+        animationTrance.setRepeatCount(Animation.INFINITE);
+        imagePizzaPushData.startAnimation(animationTrance);
+    }
+
+    private static void pushDataAnimationStop() {
+        imagePizzaPushData.setVisibility(View.GONE);
+        imagePizzaPushData.clearAnimation();
+    }
+
+    private void downloadAnimationStart() {
+        animationRotate.setRepeatCount(Animation.INFINITE);
+        imagePizzaDownload.startAnimation(animationRotate);
+    }
+
+    private static void downloadAnimationStop() {
+        imagePizzaDownload.clearAnimation();
+        imagePizzaDownload.setVisibility(View.GONE);
+    }
+
+    //-----------------------------------------------
 
     private void addDataToFireStore(ArrayList<Pizza> list, String nameCollection) {
         for(int i = 0; i < list.size(); i++) {
@@ -91,6 +180,7 @@ public class MainActivityAdmin extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            checkAndIncrementSuccess();
                             Log.i(TAG, "DocumentSnapshot successfully written!");
                         }
                     })
@@ -110,7 +200,6 @@ public class MainActivityAdmin extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
 
             aztecaList.clear();
         }
@@ -138,15 +227,15 @@ public class MainActivityAdmin extends AppCompatActivity {
                             .select("span.amount")
                             .text();
                     String imageSrc = elements.get(i).select("img").attr("src");
-                   // String imagePath = makeImage(imageSrc, Resources.AZTECA);
+                    // String imagePath = makeImage(imageSrc, Resources.AZTECA);
 
 
                     aztecaList.add(new Pizza(id, title, null, priceStandart,
-                            priceLarge, getDigits(diameter).concat("см."), getDigits(diameterLarge).concat("см."),
+                            priceLarge, diameter, diameterLarge,
                             description, imageSrc));
 
                     Log.i(TAG, title + "\n" + priceStandart + "\n" + priceLarge + "\n"
-                            + description + "\n" + getDigits(diameter).concat("см.") + "\n" + getDigits(diameterLarge).concat("см.")
+                            + description + "\n" + diameter + "\n" + diameterLarge
                             + "\n" + imageSrc);
                 }
 
@@ -192,7 +281,7 @@ public class MainActivityAdmin extends AppCompatActivity {
                             .select("span.mis_right").text();
                     String imgSrc = elements.get(i).select("img")
                             .attr("src");
-                   // String imagePath = makeImage(imgSrc, Resources.PIZZAIF);
+                    // String imagePath = makeImage(imgSrc, Resources.PIZZAIF);
 
                     pizzaIFList.add(new Pizza(id, title, parserPizzaIfWeight(diameterAndWeight), priceStandart,
                             null, parsePizzaIfDiameter(diameterAndWeight), null,
@@ -267,7 +356,17 @@ public class MainActivityAdmin extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
-            progressBar.setVisibility(View.INVISIBLE);
+
+            // animation
+
+            downloadAnimationStop();
+
+            pushDataBtn.setEnabled(true);
+            getDataBtn.setEnabled(false);
+            imagePizzaPizza.setVisibility(View.VISIBLE);
+
+            pushDataAnimationStart();
+
             Log.i(TAG, camelotFoodList.size() + "");
         }
     }

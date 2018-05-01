@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,8 @@ public class PizzaFragment extends Fragment {
     private PizzaAdapter adapter;
 
     private static final String TAG = PizzaFragment.class.getSimpleName();
+    private static Fragment currentFragment;
+    private static String fragmentType;
 
     private static final String KEY = "Container";
     private String domain;
@@ -84,13 +87,29 @@ public class PizzaFragment extends Fragment {
     private Fragment choseFragment(int pizzaId) {
         switch (domain) {
             case Resource.AZTECA:
-                return AztecaFragment.newInstance(pizzaId);
+                fragmentType = Resource.AZTECA;
+                return currentFragment = AztecaFragment.newInstance(pizzaId);
             case Resource.PIZZAIF:
-                return PizzaIFFragment.newInstance(pizzaId);
+                fragmentType = Resource.PIZZAIF;
+                return currentFragment = PizzaIFFragment.newInstance(pizzaId);
             case Resource.CAMELOTFOOD:
-                return CamelotFoodFragment.newInstance(pizzaId);
+                fragmentType = Resource.CAMELOTFOOD;
+                return currentFragment = CamelotFoodFragment.newInstance(pizzaId);
         }
         return null;
+    }
+    public void refreshAdapter() {
+        if(adapter != null) {
+            adapter.notifyDataSetChanged();
+        }
+    }
+
+    public static Fragment getCurrentFragment() {
+        return currentFragment;
+    }
+
+    public static String getFragmentType () {
+        return fragmentType;
     }
 
     private class PizzaHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

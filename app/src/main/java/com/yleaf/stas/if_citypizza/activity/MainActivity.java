@@ -19,7 +19,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
@@ -33,10 +32,12 @@ import com.yleaf.stas.if_citypizza.db.service.CamelotFoodInfoService;
 import com.yleaf.stas.if_citypizza.db.service.CamelotFoodService;
 import com.yleaf.stas.if_citypizza.db.service.PizzaIFInfoService;
 import com.yleaf.stas.if_citypizza.db.service.PizzaIFService;
+import com.yleaf.stas.if_citypizza.fragment.AztecaFragment;
+import com.yleaf.stas.if_citypizza.fragment.CamelotFoodFragment;
 import com.yleaf.stas.if_citypizza.fragment.MainFragment;
+import com.yleaf.stas.if_citypizza.fragment.PizzaFragment;
+import com.yleaf.stas.if_citypizza.fragment.PizzaIFFragment;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -185,6 +186,14 @@ public class MainActivity extends AppCompatActivity {
             createFragment();
 
             // addDataToDB();  // Data was written
+
+            listenObjects(Resource.AZTECAINFO, aztecaInfo);
+            listenObjects(Resource.PIZZAIFINFO, pizzaIFInfo);
+            listenObjects(Resource.CAMELOTFOODINFO, camelotFoodInfo);
+
+            listenCollections(Resource.AZTECA, "weight");
+            listenCollections(Resource.PIZZAIF, "diameterLarge");
+            listenCollections(Resource.CAMELOTFOOD, "weight");
         }
 
     }
@@ -214,6 +223,9 @@ public class MainActivity extends AppCompatActivity {
                                     .setCamelotFoodInfo(documentSnapshot.toObject(Manufacturer.class));
                             break;
                     }
+
+                    refreshCurrentPizza();
+
                     Log.w(TAG, "Current data: " + documentSnapshot.getData());
                 } else {
                     Log.wtf(TAG, "Current data: NULL");
@@ -252,9 +264,36 @@ public class MainActivity extends AppCompatActivity {
                                 break;
                         }
 
+                        refreshTabLayout();
+                        refreshCurrentPizza();
+
                         Log.w(TAG, "Current data: " + value.toObjects(Pizza.class));
                     }
                 });
+    }
+
+    private void refreshTabLayout() {
+        MainFragment.mainAdapter.refreshData();
+    }
+
+    private void refreshCurrentPizza() {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+
+            Fragment fragment = PizzaFragment.getCurrentFragment();
+
+            switch (PizzaFragment.getFragmentType()) {
+                case Resource.AZTECA:
+                    ((AztecaFragment)fragment).updateUI();
+                    break;
+                case Resource.PIZZAIF:
+                    ((PizzaIFFragment)fragment).updateUI();
+                    break;
+                case Resource.CAMELOTFOOD:
+                    ((CamelotFoodFragment)fragment).updateUI();
+                    break;
+            }
+
+        }
     }
 
     private void clearDB() {
@@ -275,33 +314,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        int count = getSupportFragmentManager().getBackStackEntryCount();
-
-        if (count == 0) {
-            super.onBackPressed();
-        } else {
+        if(getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStack();
+        } else {
+            super.onBackPressed();
         }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    public boolean onSearchRequested() {
+        Bundle appData = new Bundle();
+        appData.putBoolean(SearchableActivity.JARGON, true);
+        startSearch(null, false, appData, false);
 
-        listenObjects(Resource.AZTECAINFO, aztecaInfo);
-        listenObjects(Resource.PIZZAIFINFO, pizzaIFInfo);
-        listenObjects(Resource.CAMELOTFOODINFO, camelotFoodInfo);
-
-        listenCollections(Resource.AZTECA, "weight");
-        listenCollections(Resource.PIZZAIF, "diameterLarge");
-        listenCollections(Resource.CAMELOTFOOD, "weight");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        // FireBaseAuth sign out
-      //  FirebaseAuth.getInstance().signOut();
+        Log.wtf(TAG, "onSearchRequested");
+        return true;
     }
 }

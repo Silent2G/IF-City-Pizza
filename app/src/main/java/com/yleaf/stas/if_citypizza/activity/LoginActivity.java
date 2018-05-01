@@ -2,6 +2,8 @@ package com.yleaf.stas.if_citypizza.activity;
 
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -80,5 +82,9 @@ public class LoginActivity extends AppCompatActivity {
             replaceLoginFragment();
         else
             super.onBackPressed();
+    }
+
+    public static Intent newIntent(Context packageContext) {
+        return new Intent(packageContext, LoginActivity.class);
     }
 }

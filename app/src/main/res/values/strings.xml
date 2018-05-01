@@ -26,4 +26,5 @@
     <string name="vodafone">Vodafone call</string>
     <string name="kyivstar">Kyivstar call</string>
     <string name="ukrtelecom">Ukrtelecom call</string>
+    <string name="search_hint">Search pizza</string>
 </resources>

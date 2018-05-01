@@ -34,12 +34,12 @@ import java.util.regex.Pattern;
  */
 
 public class SignUpFragment extends Fragment implements View.OnClickListener {
-    private static View view;
-    private static EditText fullName, emailId, mobileNumber, location,
+    private View view;
+    private EditText fullName, emailId, mobileNumber, location,
             password, confirmPassword;
-    private static TextView login;
-    private static Button signUpButton;
-    private static CheckBox terms_conditions;
+    private TextView login;
+    private Button signUpButton;
+    private CheckBox terms_conditions;
 
     private FirebaseAuth mAuth;
 
@@ -113,7 +113,6 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                          //  FileManager.addUser(new User(getFullName, getEmailId, getMobileNumber, getLocation), getContext(), view);
                             Toast.makeText(getActivity(), "Success registration =)", Toast.LENGTH_SHORT).show();
                         }
                     }

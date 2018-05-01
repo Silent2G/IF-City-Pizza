@@ -47,29 +47,142 @@
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scrollable_view_camelotfood"
-        android:background="#ffffff"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ffffff"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-        <RelativeLayout
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="600dp"
             android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/image_manufacturer_camelotfood"
-                android:layout_width="216dp"
-                android:layout_height="216dp"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="34dp"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
                 android:adjustViewBounds="true"
                 android:fitsSystemWindows="true"
-                android:scaleType="fitCenter"
+                android:scaleType="centerCrop"
                 tools:ignore="ContentDescription" />
 
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_description_camelotfood"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="300dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                android:layout_height="100dp"
+                android:text="Pizza description"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="145dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:contentDescription="diameter_standart"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_do_not_disturb_alt" />
+
+                    <TextView
+                        android:id="@+id/tv_size_standart_camelotfood"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:textColor="#009100"
+                        android:textSize="20sp"
+                        android:text="32см."/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="145dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:contentDescription="price_standart"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:scaleType="fitCenter"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        app:srcCompat="@drawable/ic_account_balance_wallet" />
+
+                    <TextView
+                        android:id="@+id/tv_price_standart_camelotfood"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center"
+                        android:textColor="#009100"
+                        android:textSize="22sp"
+                        android:text="152грн."/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="60dp"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/button_call_camelotfood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_weight="1"
+                    android:text="@string/make_call"
+                    android:background="@drawable/azteca_button"
+                    android:textColor="@drawable/azteca_text_color"/>
+
+                <Button
+                    android:id="@+id/button_add_camelotfood"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:text="@string/add_to_cart"
+                    android:background="@drawable/azteca_button"
+                    android:textColor="@drawable/azteca_text_color"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

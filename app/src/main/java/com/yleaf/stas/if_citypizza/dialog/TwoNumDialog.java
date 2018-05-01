@@ -31,7 +31,7 @@ public class TwoNumDialog extends DialogFragment {
         dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.setContentView(R.layout.four_dialog_layout);
+        dialog.setContentView(R.layout.two_dialog_layout);
 
         ImageButton vodafone = dialog.findViewById(R.id.image_vodafone);
         ImageButton kyivstar = dialog.findViewById(R.id.image_kyivstar);
@@ -54,12 +54,13 @@ public class TwoNumDialog extends DialogFragment {
     }
 
     private void call(String number) {
-        startActivity(new Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", number, null)));
+        startActivity(new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", number, null)));
     }
 
     public static TwoNumDialog newInstance(Manufacturer manufacturer) {
 
         Bundle args = new Bundle();
+        args.putParcelable(MANUFACTURER, manufacturer);
 
         TwoNumDialog fragment = new TwoNumDialog();
         fragment.setArguments(args);

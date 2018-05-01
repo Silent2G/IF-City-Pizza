@@ -30,12 +30,12 @@ import java.util.regex.Pattern;
  */
 
 public class ForgotPasswordFragment extends Fragment implements View.OnClickListener {
-    private static View view;
+    private View view;
 
     private static String TAG = ForgotPasswordFragment.class.getSimpleName();
 
-    private static EditText emailId;
-    private static TextView submit, back;
+    private EditText emailId;
+    private TextView submit, back;
     private static ProgressDialog pd;
 
     public ForgotPasswordFragment() {}

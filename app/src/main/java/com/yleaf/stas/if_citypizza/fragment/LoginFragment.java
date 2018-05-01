@@ -48,13 +48,13 @@ import static android.content.Context.MODE_PRIVATE;
  */
 
 public class LoginFragment extends Fragment implements View.OnClickListener {
-    private static View view;
+    private View view;
 
-    private static EditText emailid, password;
-    private static Button loginButton;
-    private static TextView forgotPassword, signUp;
-    private static CheckBox show_hide_password;
-    private static LinearLayout loginLayout;
+    private EditText emailid, password;
+    private Button loginButton;
+    private TextView forgotPassword, signUp;
+    private CheckBox show_hide_password;
+    private LinearLayout loginLayout;
     private static Animation shakeAnimation;
     private static FragmentManager fragmentManager;
 
@@ -160,21 +160,18 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onCheckedChanged(CompoundButton button,
                                                  boolean isChecked) {
 
-                        // If it is checkec then show password else hide
-                        // password
+                        // If it is checkec then show password else hide password
                         if (isChecked) {
 
                             show_hide_password.setText(R.string.hide_pwd);// change
-                            // checkbox
-                            // text
+                            // checkbox text
 
                             password.setInputType(InputType.TYPE_CLASS_TEXT);
                             password.setTransformationMethod(HideReturnsTransformationMethod
                                     .getInstance());// show password
                         } else {
                             show_hide_password.setText(R.string.show_pwd);// change
-                            // checkbox
-                            // text
+                            // checkbox text
 
                             password.setInputType(InputType.TYPE_CLASS_TEXT
                                     | InputType.TYPE_TEXT_VARIATION_PASSWORD);

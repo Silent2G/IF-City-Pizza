@@ -5,14 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -46,8 +44,6 @@ public class AztecaFragment extends Fragment {
     private Button buttonCall;
     private Button buttonAddToCart;
 
-  //  private RelativeLayout relativeLayout;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +56,8 @@ public class AztecaFragment extends Fragment {
 
     private void initWidgets(View view) {
         toolbar = view.findViewById(R.id.toolbar_azteca);
-      //  relativeLayout = view.findViewById(R.id.pizza_toolbar_container);
         imageViewHeader = view.findViewById(R.id.image_header_azteca);
+        imageViewManufacturer = view.findViewById(R.id.image_manufacturer_azteca);
         textViewDescription = view.findViewById(R.id.tv_description_azteca);
         textViewSizeStandart = view.findViewById(R.id.tv_size_standart_azteca);
         textViewSizeBig = view.findViewById(R.id.tv_size_big_azteca);
@@ -72,6 +68,19 @@ public class AztecaFragment extends Fragment {
 
     }
 
+    private void setWidgets() {
+        toolbar.setTitle(pizza.getTitle());
+
+        Glide.with(appContext).load(manufacturer.getLogoSrc()).into(imageViewHeader);
+        Glide.with(appContext).load(pizza.getImageSrc()).into(imageViewManufacturer);
+
+        textViewDescription.setText(pizza.getDescription());
+        textViewSizeStandart.setText(pizza.getDiameterStandart());
+        textViewSizeBig.setText(pizza.getDiameterLarge());
+        textViewPriceStandart.setText(pizza.getPriceStandart());
+        textViewPriceBig.setText(pizza.getPriceLarge());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,32 +88,14 @@ public class AztecaFragment extends Fragment {
 
         initWidgets(view);
 
-    //    View inflate = getLayoutInflater().inflate(R.layout.pizza_toolbar, container, false);
-    //    relativeLayout.removeAllViews();
-    //    relativeLayout.addView(inflate);
+        setWidgets();
 
-    //    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-        toolbar.setTitle(pizza.getTitle());
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().onBackPressed();
             }
         });
-
-        Glide.with(appContext).load(manufacturer.getLogoSrc()).into(imageViewHeader);
-
-        imageViewManufacturer = view.findViewById(R.id.image_manufacturer_azteca);
-        Glide.with(appContext)
-                .load(pizza.getImageSrc())
-                .into(imageViewManufacturer);
-
-        textViewDescription.setText(pizza.getDescription());
-        textViewSizeStandart.setText(pizza.getDiameterStandart());
-        textViewSizeBig.setText(pizza.getDiameterLarge());
-        textViewPriceStandart.setText(pizza.getPriceStandart());
-        textViewPriceBig.setText(pizza.getPriceLarge());
 
         buttonCall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -124,6 +115,12 @@ public class AztecaFragment extends Fragment {
         });
 
         return view;
+    }
+
+    public void updateUI() {
+        pizza = DataHolder.getData(appContext).getPizzaById(Resource.AZTECA, pizzaId);
+        setWidgets();
+
     }
 
     @Override

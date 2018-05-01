@@ -6,6 +6,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 
+import com.yleaf.stas.if_citypizza.fragment.PizzaFragment;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +41,12 @@ public class ViewPagerAdapter extends FragmentStatePagerAdapter {
         mFragmentTitleList.remove(position);
 
         notifyDataSetChanged();
+    }
+
+    public void refreshData() {
+        for(int i = 0; i < mFragmentList.size(); i++) {
+            ((PizzaFragment)mFragmentList.get(i)).refreshAdapter();
+        }
     }
 
     @Override
