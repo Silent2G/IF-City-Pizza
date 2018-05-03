@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
+import com.yleaf.stas.if_citypizza.toast.CustomToastSuccess;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.model.ReservedPizza;
+import com.yleaf.stas.if_citypizza.fragment.AztecaFragment;
 
 public class ChooseSizeAzteca extends DialogFragment {
 
@@ -41,8 +41,8 @@ public class ChooseSizeAzteca extends DialogFragment {
         linearLayoutStandart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataHolder.getData(getActivity()).getAztecaReserved().add(new ReservedPizza(id, false));
-                Toast.makeText(getActivity(), "30", Toast.LENGTH_SHORT).show();
+                DataHolder.getData(getActivity()).addReservedPizzaToAzteca(id, false);
+                new CustomToastSuccess().showToast(getActivity(), AztecaFragment.getFragmentView(), "30");
                 dialog.dismiss();
 
                 Log.i(TAG, String.valueOf(DataHolder.getData(getActivity()).getAztecaReserved().size()));
@@ -53,8 +53,8 @@ public class ChooseSizeAzteca extends DialogFragment {
         linearLayoutLarge.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataHolder.getData(getActivity()).getAztecaReserved().add(new ReservedPizza(id, true));
-                Toast.makeText(getActivity(), "50", Toast.LENGTH_SHORT).show();
+                DataHolder.getData(getActivity()).addReservedPizzaToAzteca(id, true);
+                new CustomToastSuccess().showToast(getActivity(), AztecaFragment.getFragmentView(), "50");
                 dialog.dismiss();
 
                 Log.i(TAG, String.valueOf(DataHolder.getData(getActivity()).getAztecaReserved().size()));

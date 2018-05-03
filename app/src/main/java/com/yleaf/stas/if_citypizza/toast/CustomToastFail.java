@@ -1,4 +1,4 @@
-package com.yleaf.stas.if_citypizza;
+package com.yleaf.stas.if_citypizza.toast;
 
 import android.content.Context;
 import android.view.Gravity;
@@ -8,20 +8,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.yleaf.stas.if_citypizza.R;
+
 /**
  * Created by stas on 21.03.18.
  */
 
-public class CustomToast {
+public class CustomToastFail {
     // Custom Toast Method
-    public void Show_Toast(Context context, View view, String error) {
+    public void showToast(Context context, View view, String error) {
 
         // Layout Inflater for inflating custom view
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // Inflate the layout over view
-        View layout = inflater.inflate(R.layout.custom_toast,
+        View layout = inflater.inflate(R.layout.custom_toast_fail,
                 (ViewGroup) view.findViewById(R.id.toast_root));
 
         // Get TextView id and set error

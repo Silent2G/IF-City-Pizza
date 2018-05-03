@@ -21,7 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
-import com.yleaf.stas.if_citypizza.CustomToast;
+import com.yleaf.stas.if_citypizza.toast.CustomToastFail;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.RxEditText;
@@ -153,11 +153,11 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onFailure(@NonNull Exception e) {
                 if (e instanceof FirebaseAuthWeakPasswordException) {
-                    new CustomToast().Show_Toast(getActivity(), view, "Your Password Less Than 6 Chars");
+                    new CustomToastFail().showToast(getActivity(), view, "Your Password Less Than 6 Chars");
                 } else if (e instanceof FirebaseAuthInvalidCredentialsException) {
-                    new CustomToast().Show_Toast(getActivity(), view, "Your Email Is Incorrect zzzz");
+                    new CustomToastFail().showToast(getActivity(), view, "Your Email Is Incorrect zzzz");
                 } else if (e instanceof FirebaseAuthUserCollisionException) {
-                    new CustomToast().Show_Toast(getActivity(), view, "This User Is Exist");
+                    new CustomToastFail().showToast(getActivity(), view, "This User Is Exist");
                 }
             }
         });
@@ -180,17 +180,17 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
 
             // Check if email id valid or not
         if (!m.find())
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Your Email Id is Invalid.");
 
             // Check if both password should be equal
         else if (!getConfirmPassword.equals(getPassword))
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Both password doesn't match.");
 
             // Make sure user should check Terms and Conditions checkbox
         else if (!terms_conditions.isChecked())
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Please select Terms and Conditions.");
 
             // Else do signUp or do your stuff
@@ -198,7 +198,7 @@ public class SignUpFragment extends Fragment implements View.OnClickListener {
             if (LoginFragment.isOnline()) {
                 fireBaseSignInWithEmail(getFullName, getEmailId, getPassword, getMobileNumber, getLocation);
             } else {
-                new CustomToast().Show_Toast(getActivity(), view,
+                new CustomToastFail().showToast(getActivity(), view,
                         "No internet connection");
             }
 

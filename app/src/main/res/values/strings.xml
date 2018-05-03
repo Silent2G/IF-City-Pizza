@@ -29,4 +29,6 @@
     <string name="search_hint">Search pizza</string>
     <string name="azteca_standart">30 см.</string>
     <string name="azteca_large">50 см.</string>
+    <string name="order">Замовити</string>
+    <string name="delivery">Доставка</string>
 </resources>

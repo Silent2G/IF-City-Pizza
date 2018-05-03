@@ -13,17 +13,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.yleaf.stas.if_citypizza.toast.CustomToastSuccess;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
-import com.yleaf.stas.if_citypizza.dialog.ChooseSizeAzteca;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.dialog.TwoNumDialog;
-import com.yleaf.stas.if_citypizza.model.ReservedPizza;
 
 public class CamelotFoodFragment extends Fragment {
 
@@ -36,6 +34,7 @@ public class CamelotFoodFragment extends Fragment {
     private Pizza pizza;
     private Manufacturer manufacturer;
     private int pizzaId;
+    private View view;
 
     private ImageView imageViewHeader;
     private ImageView imageViewManufacturer;
@@ -81,7 +80,7 @@ public class CamelotFoodFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.camelotfood_fragment_layout, container, false);
+        view = inflater.inflate(R.layout.camelotfood_fragment_layout, container, false);
 
         initWidgets(view);
 
@@ -107,8 +106,8 @@ public class CamelotFoodFragment extends Fragment {
         buttonAddToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DataHolder.getData(appContext).getCamelotFoodReserved().add(new ReservedPizza(pizzaId, false));
-                Toast.makeText(getActivity(), "32", Toast.LENGTH_SHORT).show();
+                DataHolder.getData(appContext).addReservedPizzaToCamelotFood(pizzaId);
+                new CustomToastSuccess().showToast(appContext, view, "32");
 
                 Log.i(TAG, String.valueOf(DataHolder.getData(appContext).getCamelotFoodReserved().size()));
             }

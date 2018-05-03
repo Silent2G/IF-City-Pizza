@@ -17,7 +17,7 @@ import com.bumptech.glide.Glide;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 import com.yleaf.stas.if_citypizza.dialog.ChooseSizeAzteca;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.dialog.FourNumDialog;
@@ -33,6 +33,7 @@ public class AztecaFragment extends Fragment {
     private Pizza pizza;
     private Manufacturer manufacturer;
     private int pizzaId;
+    private static View view;
 
     private ImageView imageViewHeader;
     private ImageView imageViewManufacturer;
@@ -85,7 +86,7 @@ public class AztecaFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.azteca_fragment_layout, container, false);
+        view = inflater.inflate(R.layout.azteca_fragment_layout, container, false);
 
         initWidgets(view);
 
@@ -125,6 +126,10 @@ public class AztecaFragment extends Fragment {
         pizza = DataHolder.getData(appContext).getPizzaById(Resource.AZTECA, pizzaId);
         setWidgets();
 
+    }
+
+    public static View getFragmentView() {
+        return view;
     }
 
     @Override

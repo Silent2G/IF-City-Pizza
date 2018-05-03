@@ -33,7 +33,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
-import com.yleaf.stas.if_citypizza.CustomToast;
+import com.yleaf.stas.if_citypizza.toast.CustomToastFail;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.RxEditText;
@@ -110,13 +110,13 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     public void onFailure(@NonNull Exception e) {
                         if(e instanceof FirebaseAuthInvalidUserException) {
                             loginLayout.startAnimation(shakeAnimation);
-                            new CustomToast().Show_Toast(getActivity(), view, "This User Not Found");
+                            new CustomToastFail().showToast(getActivity(), view, "This User Not Found");
                         } else if( e instanceof FirebaseAuthInvalidCredentialsException) {
                             loginLayout.startAnimation(shakeAnimation);
-                            new CustomToast().Show_Toast(getActivity(), view, "The Password Is Invalid");
+                            new CustomToastFail().showToast(getActivity(), view, "The Password Is Invalid");
                         } else if(e instanceof FirebaseNetworkException){
                             loginLayout.startAnimation(shakeAnimation);
-                            new CustomToast().Show_Toast(getActivity(), view, "Please Check Your Connection");
+                            new CustomToastFail().showToast(getActivity(), view, "Please Check Your Connection");
                         }
                     }
                 });
@@ -268,7 +268,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         // Check if email id is valid or not
         if (!m.find()) {
             loginLayout.startAnimation(shakeAnimation);
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Your Email Id is Invalid.");
             // Do login
         } else {
@@ -278,7 +278,7 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                 fireBaseSignInWithEmail(getEmailId, getPassword);
             } else {
                 loginLayout.startAnimation(shakeAnimation);
-                new CustomToast().Show_Toast(getActivity(), view,
+                new CustomToastFail().showToast(getActivity(), view,
                         "No Internet Connection");
             }
         }

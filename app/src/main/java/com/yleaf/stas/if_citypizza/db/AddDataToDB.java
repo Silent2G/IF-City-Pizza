@@ -3,7 +3,7 @@ package com.yleaf.stas.if_citypizza.db;
 import android.content.Context;
 
 import com.yleaf.stas.if_citypizza.DataHolder;
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.db.service.AztecaInfoService;
 import com.yleaf.stas.if_citypizza.db.service.AztecaService;

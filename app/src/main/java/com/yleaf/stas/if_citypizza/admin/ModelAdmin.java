@@ -1,20 +1,12 @@
-package com.yleaf.stas.if_citypizza.admin.activity;
+package com.yleaf.stas.if_citypizza.admin;
 
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.Button;
-import android.widget.ImageView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 
@@ -22,177 +14,51 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MainActivityAdmin extends AppCompatActivity {
+public class ModelAdmin {
 
     private static Elements elements;
-    private static final String TAG = MainActivityAdmin.class.getSimpleName();
-
-    private static Button getDataBtn;
-    private static Button pushDataBtn;
+    private static final String TAG = ModelAdmin.class.getSimpleName();
 
     private AtomicInteger atomicInteger;
     private int countSuccess = 0;
 
-    private ImageView imagePizzaGetData;
-    private static ImageView imagePizzaPushData;
-    private static ImageView imagePizzaDownload;
-    private static ImageView imagePizzaPizza;
-    private ImageView imagePizzaMan;
-
-    private static Animation animationTrance;
-    private static Animation animationRotate;
+    // Access a Cloud Firestore instance from your Activity
+    FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static ArrayList<Pizza> aztecaList;
     private static ArrayList<Pizza> pizzaIFList;
     private static ArrayList<Pizza> camelotFoodList;
 
-    // Access a Cloud Firestore instance from your Activity
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout_admin);
-
-        // init lists
-        aztecaList = new ArrayList<Pizza>();
-        pizzaIFList = new ArrayList<Pizza>();
-        camelotFoodList = new ArrayList<Pizza>();
-
-        // init widgets
-        getDataBtn = findViewById(R.id.get_data_btn);
-        pushDataBtn = findViewById(R.id.push_data_btn);
-
-        pushDataBtn.setEnabled(false);
-
-        imagePizzaGetData = findViewById(R.id.image_pizza_get_data);
-        imagePizzaPushData = findViewById(R.id.image_pizza_push_data);
-        imagePizzaDownload = findViewById(R.id.image_pizza_download);
-        imagePizzaPizza = findViewById(R.id.image_pizza_pizza);
-        imagePizzaMan = findViewById(R.id.image_pizza_man);
-
-        imagePizzaPushData.setVisibility(View.INVISIBLE);
-        imagePizzaDownload.setVisibility(View.INVISIBLE);
-        imagePizzaPizza.setVisibility(View.INVISIBLE);
-        imagePizzaMan.setVisibility(View.INVISIBLE);
-
-        animationTrance = AnimationUtils.loadAnimation(this,R.anim.trance);
-        animationRotate = AnimationUtils.loadAnimation(this,R.anim.rotate);
-
-        //firstAnimation
-        getDataAnimationStart();
-
-        getDataBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AztecaPizza().execute();
-                new PizzaIF().execute();
-                new CamelotFood().execute();
-
-                // animation
-                getDataAnimationStop();
-                downloadAnimationStart();
-            }
-
-        });
-
-        pushDataBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                atomicInteger = new AtomicInteger();
-                makeSuccessNumber();
-
-                addDataToFireStore(aztecaList, Resource.AZTECA);
-                addDataToFireStore(pizzaIFList, Resource.PIZZAIF);
-                addDataToFireStore(camelotFoodList, Resource.CAMELOTFOOD);
-
-                // animation
-                pushDataAnimationStop();
-                downloadAnimationStart();
-                imagePizzaPizza.setVisibility(View.GONE);
-            }
-        });
-
+    private void initCollections() {
+        aztecaList = new ArrayList<>();
+        pizzaIFList = new ArrayList<>();
+        camelotFoodList = new ArrayList<>();
     }
 
-    private void checkAndIncrementSuccess() {
-        if (atomicInteger.incrementAndGet() == countSuccess) {
-            downloadAnimationStop();
-            imagePizzaMan.setVisibility(View.VISIBLE);
-            pushDataBtn.setEnabled(false);
-        }
+    public void loadData(CompleteCallback callback) {
+
+        initCollections();
+
+        new AztecaPizza().execute();
+        new PizzaIF().execute();
+        new CamelotFood(callback).execute();
     }
 
-    private void makeSuccessNumber() {
-        countSuccess = aztecaList.size() + pizzaIFList.size() + camelotFoodList.size();
+    public void pushData(CompleteCallback callback) {
+        atomicInteger = new AtomicInteger();
+        makeSuccessNumber();
+
+        addDataToFireStore(callback, aztecaList, Resource.AZTECA);
+        addDataToFireStore(callback, pizzaIFList, Resource.PIZZAIF);
+        addDataToFireStore(callback, camelotFoodList, Resource.CAMELOTFOOD);
     }
 
-    // animation methods -----------------------------------
-
-    private void getDataAnimationStart() {
-        animationTrance.setRepeatCount(Animation.INFINITE);
-        imagePizzaGetData.startAnimation(animationTrance);
-    }
-
-    private void getDataAnimationStop() {
-        imagePizzaGetData.clearAnimation();
-        imagePizzaGetData.setVisibility(View.GONE);
-    }
-
-    private static void pushDataAnimationStart() {
-        animationTrance.setRepeatCount(Animation.INFINITE);
-        imagePizzaPushData.startAnimation(animationTrance);
-    }
-
-    private static void pushDataAnimationStop() {
-        imagePizzaPushData.setVisibility(View.GONE);
-        imagePizzaPushData.clearAnimation();
-    }
-
-    private void downloadAnimationStart() {
-        animationRotate.setRepeatCount(Animation.INFINITE);
-        imagePizzaDownload.startAnimation(animationRotate);
-    }
-
-    private static void downloadAnimationStop() {
-        imagePizzaDownload.clearAnimation();
-        imagePizzaDownload.setVisibility(View.GONE);
-    }
-
-    //-----------------------------------------------
-
-    private void addDataToFireStore(ArrayList<Pizza> list, String nameCollection) {
-        for(int i = 0; i < list.size(); i++) {
-
-            db.collection(nameCollection).document(list.get(i).getTitle())
-                    .set(list.get(i))
-                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            checkAndIncrementSuccess();
-                            Log.i(TAG, "DocumentSnapshot successfully written!");
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.w(TAG, "Error writing document", e);
-                        }
-                    });
-
-
-        }
+    interface CompleteCallback {
+        void onComplete();
     }
 
     private static class AztecaPizza extends AsyncTask<Void, Void, Void> {
@@ -242,7 +108,6 @@ public class MainActivityAdmin extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -295,7 +160,6 @@ public class MainActivityAdmin extends AppCompatActivity {
             catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -307,6 +171,12 @@ public class MainActivityAdmin extends AppCompatActivity {
     }
 
     private static class CamelotFood extends AsyncTask<Void, Void, Void> {
+
+        private final CompleteCallback callback;
+
+        public CamelotFood(CompleteCallback callback) {
+            this.callback = callback;
+        }
 
         @Override
         protected void onPreExecute() {
@@ -357,15 +227,9 @@ public class MainActivityAdmin extends AppCompatActivity {
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            // animation
-
-            downloadAnimationStop();
-
-            pushDataBtn.setEnabled(true);
-            getDataBtn.setEnabled(false);
-            imagePizzaPizza.setVisibility(View.VISIBLE);
-
-            pushDataAnimationStart();
+            if (callback != null) {
+                callback.onComplete();
+            }
 
             Log.i(TAG, camelotFoodList.size() + "");
         }
@@ -375,7 +239,7 @@ public class MainActivityAdmin extends AppCompatActivity {
         String result = null;
         if(string.length() > 10) {
             result = getDigits(string.substring(7,string.length()-1));
-            result = result.concat(" гр.");
+            result = result.concat(" г.");
         }
         return result;
     }
@@ -400,6 +264,41 @@ public class MainActivityAdmin extends AppCompatActivity {
         return result;
     }
 
+    private void addDataToFireStore(final CompleteCallback callback, ArrayList<Pizza> list, String nameCollection) {
+        for(int i = 0; i < list.size(); i++) {
+
+            db.collection(nameCollection).document(list.get(i).getTitle())
+                    .set(list.get(i))
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            checkAndIncrementSuccess(callback);
+                            Log.i(TAG, "DocumentSnapshot successfully written!");
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error writing document", e);
+                        }
+                    });
+        }
+    }
+
+    private void checkAndIncrementSuccess(CompleteCallback callback) {
+        if (atomicInteger.incrementAndGet() == countSuccess) {
+
+            if (callback != null) {
+                callback.onComplete();
+            }
+        }
+    }
+
+    private void makeSuccessNumber() {
+        countSuccess = aztecaList.size() + pizzaIFList.size() + camelotFoodList.size();
+    }
+
+    /*
     private String makeImage(String src, String folderName) throws IOException {
 
         String imagePath;
@@ -432,7 +331,7 @@ public class MainActivityAdmin extends AppCompatActivity {
     }
 
     private String createFolder(String folderName) {
-        File folder = new File(getFilesDir() +
+        File folder = new File(  getFilesDir() +
                 File.separator + folderName);
 
         // Log.i(TAG, folder.toString());
@@ -448,5 +347,5 @@ public class MainActivityAdmin extends AppCompatActivity {
             Log.i(TAG, " FOLDER NOT CREATED");
 
         return folder.toString();
-    }
+    }  */
 }

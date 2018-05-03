@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import android.widget.ImageButton;
 
 import com.yleaf.stas.if_citypizza.R;
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 
 public class TwoNumDialog extends DialogFragment {
     private static final String MANUFACTURER = "manufacturer";

@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.yleaf.stas.if_citypizza.CustomToast;
+import com.yleaf.stas.if_citypizza.toast.CustomToastFail;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
 import com.yleaf.stas.if_citypizza.activity.LoginActivity;
@@ -123,16 +123,16 @@ public class ForgotPasswordFragment extends Fragment implements View.OnClickList
 
         // First check if email id is not null else show error toast
         if (getEmailId.isEmpty()) {
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Please enter your Email Id.");
 
             // Check if email id is valid or not
         }  else if (!m.find()) {
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Your Email Id is Invalid.");
             // Else submit email id and fetch passwod or do your stuff
         } else if(!findEmail(getEmailId)) {
-            new CustomToast().Show_Toast(getActivity(), view,
+            new CustomToastFail().showToast(getActivity(), view,
                     "Your Email Id is Not Found.");
         } else {
             if(isOnline()) {
@@ -140,7 +140,7 @@ public class ForgotPasswordFragment extends Fragment implements View.OnClickList
                         "Please Wait...");
                 sendForgotEmailId(getEmailId);
             } else {
-                new CustomToast().Show_Toast(getActivity(), view,
+                new CustomToastFail().showToast(getActivity(), view,
                         "No Internet Connection");
             }
         }

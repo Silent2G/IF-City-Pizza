@@ -23,7 +23,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.yleaf.stas.if_citypizza.DataHolder;
 import com.yleaf.stas.if_citypizza.R;
 import com.yleaf.stas.if_citypizza.Resource;
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.db.AddDataToDB;
 import com.yleaf.stas.if_citypizza.db.service.AztecaInfoService;

@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingTop="7dp"
         android:paddingBottom="10dp">
 
         <TextView
@@ -33,7 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/linear_layout_selector">
 
             <ImageView
                 android:id="@+id/image_standart"
@@ -59,7 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:background="@drawable/linear_layout_selector">
 
             <ImageView
                 android:id="@+id/image_large"

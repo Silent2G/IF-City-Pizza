@@ -2,7 +2,7 @@ package com.yleaf.stas.if_citypizza;
 
 import android.content.Context;
 
-import com.yleaf.stas.if_citypizza.admin.Manufacturer;
+import com.yleaf.stas.if_citypizza.model.Manufacturer;
 import com.yleaf.stas.if_citypizza.model.Pizza;
 import com.yleaf.stas.if_citypizza.model.ReservedPizza;
 
@@ -87,6 +87,18 @@ public final class DataHolder {
                 return pizza;
         }
         return null;
+    }
+
+    public void addReservedPizzaToAzteca(int id, boolean pizzaLarge) {
+
+    }
+
+    public void addReservedPizzaToPizzaIF(int id) {
+
+    }
+
+    public void addReservedPizzaToCamelotFood(int id) {
+
     }
 
     public ArrayList<Pizza> getAzteca() {

@@ -1,4 +1,4 @@
-package com.yleaf.stas.if_citypizza.admin;
+package com.yleaf.stas.if_citypizza.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
